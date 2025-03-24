@@ -17,7 +17,7 @@ const app = express();
 
 //cors 
 app.use(cors({
-  origin: ["http://localhost:3000", "https://book-karo-rho.vercel.app"], // Allow both local & deployed frontend
+  origin: ["http://localhost:3000"], // Allow both local & deployed frontend
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }));
