@@ -16,11 +16,25 @@ dbConnect().then(() => {
 const app = express();
 
 //cors 
+// app.use(cors({
+//   origin: ["http://localhost:3000","https://book-karo-liard.vercel.app/"], // Allow both local & deployed frontend
+//   methods: ["GET", "POST", "PUT", "DELETE"],
+//   credentials: true
+// }));
+// ✅ Fix CORS Issue
 app.use(cors({
-  origin: ["http://localhost:3000","https://book-karo-liard.vercel.app/"], // Allow both local & deployed frontend
+  origin: "*",  // Temporary fix for all origins
   methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true
+  allowedHeaders: ["Content-Type", "Authorization"]
 }));
+
+// ✅ Alternative: Restrict to Frontend Domain (Safer)
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "https://book-karo-liard.vercel.app");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  next();
+});
 
 
 //Middleware
