@@ -1,0 +1,338 @@
+/* Netflix-style Movie Detail Page */
+.moviedetail-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  color: white;
+  font-family: "Arial", sans-serif;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: black; /* Dark theme like Netflix */
+}
+
+.moviedetail-go-back-btn {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: white;
+  padding: 10px 15px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: 0.3s;
+}
+
+.moviedetail-go-back-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.moviedetail-content {
+  display: flex;
+  max-width: 85%;
+  gap: 40px;
+  align-items: center;
+}
+
+.moviedetail-poster {
+  width: 280px;
+  height: 430px;
+  object-fit: cover;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2);
+}
+
+.moviedetail-info {
+  max-width: 600px;
+}
+
+.moviedetail-title {
+  font-size: 50px;
+  font-weight: bold;
+}
+
+.moviedetail-genre,
+.moviedetail-rating,
+.moviedetail-release {
+  font-size: 18px;
+  color: #b3b3b3;
+  margin-top: 10px;
+}
+
+.moviedetail-description {
+  font-size: 18px;
+  line-height: 1.5;
+  margin-top: 15px;
+}
+
+.moviedetail-book-btn {
+  margin-top: 20px;
+  padding: 12px 24px;
+  background: red;
+  border: none;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: 0.3s;
+}
+
+.moviedetail-book-btn:hover {
+  background: darkred;
+}
+.moviedetail-coming-soon-btn {
+  margin-top: 20px;
+  padding: 12px 24px;
+  background: red;
+  border: none;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: 0.3s;
+}
+
+/* Booking Modal */
+.moviedetail-booking-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8); /* Darker overlay for immersive effect */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.moviedetail-booking-content {
+  background: #121212; /* Netflix-style dark background */
+  padding: 25px;
+  border-radius: 10px;
+  width: 460px;
+  text-align: center;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.2);
+}
+
+.moviedetail-booking-content h2 {
+  margin-bottom: 15px;
+  font-size: 24px;
+  color: white;
+}
+
+/* Movie poster inside booking form */
+.moviedetail-booking-poster {
+  width: 130px;
+  height: 190px;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2);
+  margin-bottom: 15px;
+}
+
+/* Booking Details */
+.moviedetail-booking-details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.moviedetail-booking-content form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.moviedetail-booking-content label {
+  font-size: 16px;
+  margin-bottom: 5px;
+  text-align: left;
+  width: 100%;
+}
+
+.moviedetail-booking-content select {
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: none;
+  margin-bottom: 10px;
+  width: 100%;
+  background: #333;
+  color: white;
+}
+
+/* Ticket Selector */
+.moviedetail-ticket-selector {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.moviedetail-ticket-btn {
+  background: #444;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: 0.3s;
+}
+
+.moviedetail-ticket-btn:hover {
+  background: #666;
+}
+
+.moviedetail-ticket-count {
+  font-size: 18px;
+  font-weight: bold;
+  min-width: 30px;
+  text-align: center;
+}
+
+/* Total Price */
+.moviedetail-total-price {
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 10px;
+  color: #ffcc00;
+}
+
+/* Buttons */
+.moviedetail-booking-buttons {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 15px;
+}
+
+.moviedetail-booking-buttons button {
+  padding: 10px 14px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  border: none;
+  transition: 0.3s;
+  width: 48%;
+}
+
+.confirm-booking-btn {
+  background: red;
+  color: white;
+}
+
+.confirm-booking-btn:hover {
+  background: darkred;
+}
+
+.cancel-booking-btn {
+  background: #555;
+  color: white;
+}
+
+.cancel-booking-btn:hover {
+  background: #777;
+}
+
+/* Booking message */
+.moviedetail-message {
+  margin-top: 15px;
+  font-size: 16px;
+  font-weight: bold;
+  color: green;
+}
+
+.payment-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.payment-modal {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  width: 350px;
+}
+
+.payment-card {
+  background: #ffcc66;
+  padding: 15px;
+  border-radius: 10px;
+  text-align: left;
+  margin: 10px 0;
+}
+
+.payment-amount {
+  font-weight: bold;
+}
+
+.card-fields input {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+  border: none;
+  border-radius: 5px;
+}
+
+.small-fields {
+  display: flex;
+  gap: 10px;
+}
+
+.small-fields input {
+  width: 48%;
+}
+
+.complete-order-btn {
+  width: 100%;
+  background: #333;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.cancel-order-btn {
+  width: 100%;
+  background: #d9534f;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 5px;
+}
+button, select {
+  text-transform: none;
+  color: white;
+  background: red;
+}
+/* Responsive Design */
+@media (max-width: 768px) {
+  .moviedetail-payment-content {
+    width: 90%;
+  }
+}

@@ -1,0 +1,82 @@
+/* Full-height background fix */
+html, body {
+    height: 100%;
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(to right, #fdfbfb, #d3c9c9);
+}
+
+/* Center the form properly */
+/* .d-flex {
+     height: 100vh; /*Full viewport height */
+    /* background: linear-gradient(to right,#fdfbfb, #d3c9c9);
+} */ 
+
+/* Card styling */
+/* .card {
+    background: white;
+    border-radius: 12px;
+    
+    padding: 30px;
+} */
+
+/* Heading */
+h2 {
+    font-weight: bold;
+    color: #333;
+}
+
+/* Input Fields */
+.form-control {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ff758c;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: 0.3s ease-in-out;
+}
+
+.form-control:focus {
+    border-color: #ff4e6a;
+    outline: none;
+    box-shadow: 0 0 8px rgba(255, 117, 140, 0.5);
+}
+
+/* Button */
+.btn-primary {
+    background: linear-gradient(135deg, #ff758c, #ff7eb3);
+    border: none;
+    padding: 12px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 8px;
+    transition: 0.3s ease-in-out;
+    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.15);
+}
+
+.btn-primary:hover {
+    transform: scale(1.05);
+    background: linear-gradient(135deg, #ff4e6a, #ff758c);
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.25);
+}
+
+/* Link Styling */
+a {
+    color: #ff4e6a;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.bg-light {
+    --bs-bg-opacity: 1;
+    /* background-color: rgba(var(--bs-light-rgb),var(--bs-bg-opacity))!important; */
+    padding-top: 40px;
+}
+.bg-light {
+    --bs-bg-opacity: 1;
+    background-color: transparent !important;
+}

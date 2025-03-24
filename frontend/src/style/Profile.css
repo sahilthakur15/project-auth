@@ -1,0 +1,73 @@
+/* Light Pastel Gradient Background */
+.profile-body {
+    background: linear-gradient(to right, #fdfbfb, #d3c9c9);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Main Container */
+.profile-container {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+    text-align: center;
+}
+
+/* Page Title */
+.profile-title {
+    font-size: 28px;
+    font-weight: bold;
+    color: #ff758c;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+}
+
+/* Profile Card */
+.profile-card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    transition: 0.3s ease-in-out;
+    box-shadow: 3px 6px 12px rgba(0, 0, 0, 0.2);
+    border-left: 5px solid #ff758c;
+    text-align: center;
+}
+
+.profile-card:hover {
+    transform: scale(1.05);
+    box-shadow: 5px 8px 15px rgba(0, 0, 0, 0.3);
+    border-left: 6px solid #e05270;
+}
+
+/* Avatar Styling */
+.profile-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 3px solid #ff758c;
+    margin-bottom: 10px;
+}
+
+/* User Info */
+.profile-username {
+    font-size: 22px;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.profile-email,
+.profile-role {
+    font-size: 16px;
+    color: #555;
+    margin: 4px 0;
+}
+
+/* Loading Text */
+.profile-loading {
+    font-size: 18px;
+    color: #777;
+    margin-top: 20px;
+}
