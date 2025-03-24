@@ -3,11 +3,10 @@ import { jwtDecode } from "jwt-decode";
 
 // Create an axios instance
 const axiosInstance = axios.create({
-    baseURL: process.env.NODE_ENV === "development" 
-        ? "http://localhost:8001/api"  // Local backend
-        : "https://backend-six-flame-55.vercel.app/api",  // Deployed backend
+    baseURL: "http://localhost:8001/api", 
     headers: { "Content-Type": "application/json" },
-});
+  });
+  
 
   
 
