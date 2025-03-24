@@ -406,3 +406,23 @@
         max-width: 280px;
     }
 }
+/* 🌍 Responsive Styles */
+@media (max-width: 768px) {
+    .userdash-navbar {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    .userdash-filters {
+        flex-direction: column;
+        align-items: center;
+    }
+    .movie-grid {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    .movie-card {
+        width: 100%;
+        max-width: 280px;
+    }
+}

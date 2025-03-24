@@ -336,3 +336,130 @@ button, select {
     width: 90%;
   }
 }
+/* 📱 Responsive Design */
+@media (max-width: 1024px) {
+  .moviedetail-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 20px;
+    max-width: 95%;
+  }
+
+  .moviedetail-poster {
+    width: 80%;
+    max-width: 250px;
+    height: auto;
+  }
+
+  .moviedetail-info {
+    max-width: 100%;
+    padding: 0 15px;
+  }
+
+  .moviedetail-title {
+    font-size: 36px;
+  }
+
+  .moviedetail-genre,
+  .moviedetail-rating,
+  .moviedetail-release,
+  .moviedetail-description {
+    font-size: 16px;
+  }
+
+  .moviedetail-book-btn,
+  .moviedetail-coming-soon-btn {
+    font-size: 18px;
+    padding: 10px 20px;
+  }
+
+  /* 🎟 Booking Modal */
+  .moviedetail-booking-content {
+    width: 90%;
+    padding: 20px;
+  }
+
+  .moviedetail-booking-poster {
+    width: 100px;
+    height: 150px;
+  }
+
+  .moviedetail-booking-buttons button {
+    font-size: 14px;
+    padding: 8px 12px;
+  }
+
+  /* 💳 Payment Modal */
+  .payment-modal {
+    width: 90%;
+    padding: 15px;
+  }
+
+  .payment-card {
+    padding: 10px;
+  }
+
+  .payment-card input {
+    font-size: 14px;
+  }
+
+  .complete-order-btn,
+  .cancel-order-btn {
+    font-size: 16px;
+    padding: 8px;
+  }
+}
+
+@media (max-width: 600px) {
+  .moviedetail-title {
+    font-size: 28px;
+  }
+
+  .moviedetail-genre,
+  .moviedetail-rating,
+  .moviedetail-release,
+  .moviedetail-description {
+    font-size: 14px;
+  }
+
+  .moviedetail-book-btn,
+  .moviedetail-coming-soon-btn {
+    font-size: 16px;
+    padding: 8px 16px;
+  }
+
+  .moviedetail-booking-content {
+    width: 95%;
+    padding: 15px;
+  }
+
+  .moviedetail-booking-poster {
+    width: 90px;
+    height: 130px;
+  }
+
+  .moviedetail-booking-content select {
+    font-size: 14px;
+    padding: 8px;
+  }
+
+  .moviedetail-booking-buttons button {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+
+  /* 💳 Payment Modal */
+  .payment-modal {
+    width: 95%;
+  }
+
+  .payment-card {
+    padding: 8px;
+  }
+
+  .complete-order-btn,
+  .cancel-order-btn {
+    font-size: 14px;
+    padding: 6px;
+  }
+}

@@ -173,3 +173,48 @@ h2.movies-upcoming-title {
     height: auto;
   }
 }
+/* 📱 Mobile & Small Screens */
+@media (max-width: 768px) {
+  .movies-container {
+    height: auto;
+    padding: 20px;
+  }
+
+  .movies-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* ✅ Ensures proper spacing */
+    gap: 10px;
+    justify-content: center;
+  }
+
+  .movies-card {
+    width: 90%; /* ✅ Full width */
+    max-width: 180px; /* ✅ Small card size */
+    height: auto;
+  }
+
+  .movies-poster {
+    max-height: 200px; /* ✅ Smaller posters */
+  }
+
+  h2.movies-now-playing-title,
+  h2.movies-upcoming-title {
+    font-size: 20px;
+    margin-top: 30px;
+  }
+}
+
+/* 📱 Extra Small Screens (Phones < 500px) */
+@media (max-width: 500px) {
+  .movies-card {
+    max-width: 150px; /* ✅ Smaller cards */
+  }
+
+  .movies-poster {
+    max-height: 180px;
+  }
+
+  h2.movies-now-playing-title,
+  h2.movies-upcoming-title {
+    font-size: 18px;
+  }
+}
