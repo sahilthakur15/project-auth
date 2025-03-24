@@ -257,7 +257,7 @@ export const getMovieDetail = async (movieId) => {
 // user book movie function
 export const bookMovie = async (movieId, numTickets, totalPrice ) => {
     try{
-    const response = await axiosInstance.post("http://localhost:8001/api/user/bookmovie",
+    const response = await axiosInstance.post("/user/bookmovie",
         {
           movieId,
           numTickets,
