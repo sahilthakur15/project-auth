@@ -57,7 +57,8 @@ async function createSuperadmin() {
 
 
 //Start the Server
-const PORT = process.env.PORT || 8002;
-app.listen(PORT, ()=>{
-    console.log(`Server is running at port ${PORT}`)
-});
+// const PORT = process.env.PORT || 8002;
+// app.listen(PORT, ()=>{
+//     console.log(`Server is running at port ${PORT}`)
+// });
+module.exports = app;
