@@ -3,7 +3,7 @@ import { jwtDecode } from "jwt-decode";
 
 // Create an axios instance
 const axiosInstance = axios.create({
-    baseURL: "http://localhost:8001/api", 
+    baseURL: process.env.REACT_APP_BACKEND_URL || "http://localhost:8001/api", 
     headers: { "Content-Type": "application/json" },
   });
   
