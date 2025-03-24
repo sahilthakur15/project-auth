@@ -11,7 +11,7 @@ const generateToken = async (user) => {
     const token = jwt.sign(
         { id: user._id, role: user.role, username: user.username, email: user.email },
         process.env.JWT_SECRET,
-        { expiresIn: "6h" }
+        { expiresIn: "1h" }
     );
 
     console.log("✅ Token generated:", token); // Debug log
