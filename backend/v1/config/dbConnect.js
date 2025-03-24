@@ -16,8 +16,7 @@ const dbconnect = async () => {
     if (!cached.promise) {
         console.log("🚀 Connecting to MongoDB...");
         cached.promise = mongoose.connect(process.env.MONGODB_URI, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
+           
             serverSelectionTimeoutMS: 5000, // Timeout if MongoDB is unresponsive
         });
     }
