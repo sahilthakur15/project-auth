@@ -6,7 +6,9 @@ const cors = require("cors"); // imported cors from cors package.
 const User = require("./v1/models/userModel"); // imported User model from models folder.
 const bcrypt = require("bcryptjs"); // imported bcrypt from bcrypt package.
 const adminRoutes = require("./v1/routes/adminRoutes");
-const userRoutes = require("./v1/routes/userRoutes")
+const userRoutes = require("./v1/routes/userRoutes");
+const { ROUTES } = require("./v1/routes/routes");
+
 
 dotenv.config();
 dbConnect().then(() => {
@@ -21,6 +23,7 @@ const app = express();
 //   methods: ["GET", "POST", "PUT", "DELETE"],
 //   credentials: true
 // }));
+
 // ✅ Fix CORS Issue
 app.use(cors({
   origin: "*",  // Temporary fix for all origins
@@ -41,9 +44,9 @@ app.use((req, res, next) => {
 app.use(express.json());
 
 //Routes
-app.use("/api/auth", authRoutes); // using authRoutes from routes folder.
-app.use("/api/admin", adminRoutes); // using authRoutes from routes folder.
-app.use("/api/user", userRoutes); // using authRoutes from routes folder.
+app.use(ROUTES.AUTH, authRoutes); // using authRoutes from routes folder.
+app.use(ROUTES.ADMIN, adminRoutes); // using authRoutes from routes folder.
+app.use(ROUTES.USER, userRoutes); // using authRoutes from routes folder.
 //Super Admin
 async function createSuperadmin() {
     try {
@@ -71,8 +74,8 @@ async function createSuperadmin() {
 
 
 //Start the Server
-// const PORT = process.env.PORT || 8002;
-// app.listen(PORT, ()=>{
-//     console.log(`Server is running at port ${PORT}`)
-// });
+const PORT = process.env.PORT || 8002;
+app.listen(PORT, ()=>{
+    console.log(`Server is running at port ${PORT}`)
+});
 module.exports = app;
