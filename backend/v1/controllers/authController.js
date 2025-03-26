@@ -17,7 +17,7 @@ const register = async (req, res) => {
     const { username, email, password, role } = req.body;
 
      // Validate required fields
-     if (!username || !email || !password || !role) {
+     if (!username || !email || !password) {
       return APIResponse.error(res, {
         status: 400,
         message: Messages.VALIDATION.REQUIRED_FIELDS,

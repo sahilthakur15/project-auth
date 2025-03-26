@@ -27,7 +27,7 @@ const bookMovie = async (userId, movieId, numTickets, paymentStatus) => {
         const totalPrice = movie.price * numTickets;
 
         // Create and save order
-        const newOrder = new Order({ userId, movieId, totalPrice, paymentStatus });
+        const newOrder = new Order({ userId, movieId,numTickets, totalPrice, paymentStatus });
         await newOrder.save();
 
         return newOrder;
@@ -42,7 +42,12 @@ const bookMovie = async (userId, movieId, numTickets, paymentStatus) => {
 //update payment status
 const updatePaymentStatus = async (orderId, paymentStatus) => {
     try {
-        const updatedOrder = await Order.findByIdAndUpdate(orderId, { paymentStatus }, { new: true });
+        const updatedOrder = await Order.findByIdAndUpdate(
+            orderId,
+            { paymentStatus },
+            { new: true }
+        ).select("numTickets totalPrice paymentStatus createdAt"); // Ensure numTickets is included
+        
 
         if (!updatedOrder) {
             throw new Error(Messages.ORDERS.ORDER_NOT_FOUND);
@@ -59,10 +64,18 @@ const updatePaymentStatus = async (orderId, paymentStatus) => {
 //get completed order by id
 const getCompletedOrders = async (userId) => {
     try {
-        const completedOrders = await Order.find({ paymentStatus: "Completed", userId })
-            .populate("userId", "username email")
-            .populate("movieId", "title posterUrl")
-            .exec();
+        if (!userId) {
+            throw new Error("User ID is required to fetch orders.");
+        }
+
+        const completedOrders = await Order.find({ 
+            paymentStatus: "Completed", 
+            userId: userId // Filter by userId
+        })
+        .populate("userId", "username email")
+        .populate("movieId", "title posterUrl")
+        .select("numTickets totalPrice paymentStatus createdAt")
+        .exec();
 
         if (completedOrders.length === 0) {
             throw new Error(Messages.ORDERS.NO_COMPLETED_ORDERS);
@@ -76,13 +89,16 @@ const getCompletedOrders = async (userId) => {
 };
 
 
+
 // get all completed orders
 const getAllCompletedOrders = async () => {
     try {
         const completedOrders = await Order.find({ paymentStatus: "Completed" })
-            .populate("userId", "username email")
-            .populate("movieId", "title posterUrl")
-            .exec();
+    .populate("userId", "username email")
+    .populate("movieId", "title posterUrl")
+    .select("numTickets totalPrice paymentStatus createdAt") // Ensure numTickets is included
+    .exec();
+
 
         if (completedOrders.length === 0) {
             throw new Error(Messages.ORDERS.NO_COMPLETED_ORDERS);

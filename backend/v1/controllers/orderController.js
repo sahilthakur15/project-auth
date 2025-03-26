@@ -13,7 +13,11 @@ const bookMovie = async (req, res) => {
         return APIResponse.success(res, {
             status: 201,
             message: Messages.ORDERS.BOOKING_SUCCESS,
-            data: { orderId: order._id, numTickets, order }
+            data: { 
+                orderId: order._id, 
+                numTickets: order.numTickets,  // Ensure it's returned
+                order 
+            }
         });
     } catch (error) {
         return APIResponse.error(res, {
@@ -25,6 +29,7 @@ const bookMovie = async (req, res) => {
 };
 
 
+
 const updateStatus = async (req, res) => {
     try {
         const { orderId, paymentStatus } = req.body;
@@ -33,7 +38,13 @@ const updateStatus = async (req, res) => {
         return APIResponse.success(res, {
             status: 200,
             message: `Payment status updated to ${paymentStatus}`,
-            data: updatedOrder
+            data: {
+                orderId: updatedOrder._id,
+                numTickets: updatedOrder.numTickets,  // Ensure it's included
+                totalPrice: updatedOrder.totalPrice,
+                paymentStatus: updatedOrder.paymentStatus,
+                createdAt: updatedOrder.createdAt
+            }
         });
     } catch (error) {
         return APIResponse.error(res, {
@@ -45,17 +56,38 @@ const updateStatus = async (req, res) => {
 };
 
 
+
 const compOrders = async (req, res) => {
     try {
-        const userId = req.user.id;
+        const userId = req.user?.id; // Ensure userId is retrieved safely
+        
+        if (!userId) {
+            return APIResponse.error(res, {
+                status: 400,
+                message: "User ID is missing. Please log in.",
+            });
+        }
+
         const completedOrders = await orderService.getCompletedOrders(userId);
 
         return APIResponse.success(res, {
             status: 200,
             message: Messages.ORDERS.COMPLETED_ORDERS_FOUND,
-            data: completedOrders
+            data: completedOrders.map(order => ({
+                orderId: order._id,
+                movieId: order.movieId,
+                movieTitle: order.movieId.title,  // Include movie title
+                posterUrl: order.movieId.posterUrl, // Include movie poster
+                numTickets: order.numTickets,
+                totalPrice: order.totalPrice,
+                paymentStatus: order.paymentStatus,
+                createdAt: order.createdAt
+            }))
         });
+
     } catch (error) {
+        console.error("❌ Error in compOrders controller:", error.message);
+
         return APIResponse.error(res, {
             status: 500,
             message: Messages.SYSTEM.SERVER_ERROR,
@@ -65,24 +97,43 @@ const compOrders = async (req, res) => {
 };
 
 
+
+
+
 const getAllCompletedOrders = async (req, res) => {
     try {
         const completedOrders = await orderService.getAllCompletedOrders();
 
         if (completedOrders.length === 0) {
-            return APIResponse.error(res, { status: 404, message: Messages.ORDERS.NO_COMPLETED_ORDERS});
+            return APIResponse.error(res, { 
+                status: 404, 
+                message: Messages.ORDERS.NO_COMPLETED_ORDERS
+            });
         }
 
         return APIResponse.success(res, {
             status: 200,
             message: Messages.ORDERS.COMPLETED_ORDERS_FOUND,
-            data: completedOrders,
+            data: completedOrders.map(order => ({
+                orderId: order._id,
+                userId: order.userId,
+                movieId: order.movieId,
+                numTickets: order.numTickets,  // Ensure it's included
+                totalPrice: order.totalPrice,
+                paymentStatus: order.paymentStatus,
+                createdAt: order.createdAt
+            }))
         });
     } catch (error) {
         console.error("❌ Error fetching all completed orders:", error);
-        return APIResponse.error(res, { status: 500, message: Messages.ORDERS.ERROR_FETCHING_ORDERS, error: error.message });
+        return APIResponse.error(res, { 
+            status: 500, 
+            message: Messages.ORDERS.ERROR_FETCHING_ORDERS, 
+            data: error.message 
+        });
     }
 };
+
 
 
 module.exports = {

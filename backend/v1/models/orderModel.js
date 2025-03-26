@@ -11,6 +11,10 @@ const orderSchema = new mongoose.Schema({
         ref: "Movie",  // Match the correct model name
         required: true
     },
+    numTickets: { 
+        type: Number, 
+        required: true 
+    },
     totalPrice: {
         type: Number,
         required: true
