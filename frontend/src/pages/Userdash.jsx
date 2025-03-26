@@ -4,11 +4,13 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar, faFilm, faUser, faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
-import { jwtDecode } from "jwt-decode"; // Correct import
+import { removeLocalStorage } from "../utils/localStorageUtil";
 import "swiper/css";
 import "swiper/css/pagination";
 import "../style/Userdash.css";
-import { userMovies } from "../utils/axiosInstance";
+import { fetchMoviesService, getUserDetails } from "../services/userDashService";
+
+
 
 const UserDash = () => {
   const [movies, setMovies] = useState([]);
@@ -26,13 +28,13 @@ const UserDash = () => {
 
   useEffect(() => {
     fetchMovies();
-    fetchUserName(); // Fetch username and userId from token
+    fetchUserDetails();
   }, []);
 
   const fetchMovies = async () => {
     setLoading(true);
     try {
-      const movies = await userMovies();
+      const movies = await fetchMoviesService();
       setMovies(movies);
     } catch (error) {
       setError("Failed to load movies. Please try again later.");
@@ -41,25 +43,19 @@ const UserDash = () => {
     }
   };
 
-  const fetchUserName = () => {
-    const token = localStorage.getItem("token");
-
-    if (token) {
-      try {
-        const decodedToken = jwtDecode(token);
-        setUserName(decodedToken.username || "Guest");
-        setUserId(decodedToken._id); // Set userId
-      } catch (error) {
-        console.error("Invalid token:", error);
-      }
-    }
+  const fetchUserDetails = () => {
+    const user = getUserDetails();
+    setUserName(user.username);
+    setUserId(user.userId);
   };
-
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("role");
-    navigate("/login");
+    removeLocalStorage("token");
+    removeLocalStorage("userRole");
+    console.log("User logged out successfully");
+
+    navigate("/login"); // Redirect to login page
   };
+
 
   // Close profile dropdown when clicking outside
   useEffect(() => {

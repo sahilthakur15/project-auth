@@ -1,67 +1,62 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
-
 import "../style/Userslist.css";
 import { FaUserShield, FaUser, FaTrash } from "react-icons/fa"; // Added FaUser icon
-import { getallUsers, removeUser, updateUserRole } from "../utils/axiosInstance";
+import { fetchUsers, toggleUserRole, deleteUser } from "../services/adminUserService"; // Import the service functions
 
 export default function UsersList() {
   const [users, setUsers] = useState([]);
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate(); 
 
   useEffect(() => {
-    fetchUsers();
+    fetchUsersData();
   }, []);
 
-  const fetchUsers = async () => {
+  const fetchUsersData = async () => {
     try {
-      const Users = await getallUsers();
-      setUsers( Users || [] );
+      const usersData = await fetchUsers();
+      setUsers(usersData);
     } catch (error) {
       console.error("Error fetching users", error);
       setUsers([]);
     }
   };
 
- // Toggle Role Between "admin" and "user"
-const handleRoleToggle = async (userId, currentRole) => {
-  const newRole = currentRole === "admin" ? "user" : "admin"; // Toggle role
+  const handleRoleToggle = async (userId, currentRole) => {
+    const newRole = currentRole === "admin" ? "user" : "admin"; 
 
-  if (window.confirm(`Are you sure you want to change role to ${newRole}?`)) {
-    try {
-      const response = await updateUserRole(userId, newRole); // Call the API function
-
-      if (response?.error) {
-        alert(response.error); // Show alert for unauthorized action
-      } else {
-        alert(`Role updated successfully to ${newRole}!`);
-        fetchUsers(); // Refresh user list after update
+    if (window.confirm(`Are you sure you want to change role to ${newRole}?`)) {
+      try {
+        const response = await toggleUserRole(userId, currentRole);
+        if (response?.error) {
+          alert(response.error);
+        } else {
+          alert(`Role updated successfully to ${newRole}!`);
+          fetchUsersData(); 
+        }
+      } catch (error) {
+        console.error("❌ Error updating user role:", error);
+        alert("Failed to update role. Please try again.");
       }
-    } catch (error) {
-      console.error("❌ Error updating user role:", error);
-      alert("Failed to update role. Please try again.");
     }
-  }
-};
+  };
 
-// Handle Delete User
-const handleDelete = async (userId) => {
-  if (window.confirm("Are you sure you want to delete this user?")) {
-    try {
-      const response = await removeUser(userId); // Call the API function
-
-      if (response?.error) {
-        alert(response.error); // Show alert for unauthorized action
-      } else {
-        alert("User deleted successfully!");
-        fetchUsers(); // Refresh user list
+  const handleDelete = async (userId) => {
+    if (window.confirm("Are you sure you want to delete this user?")) {
+      try {
+        const response = await deleteUser(userId);
+        if (response?.error) {
+          alert(response.error);
+        } else {
+          alert("User deleted successfully!");
+          fetchUsersData();
+        }
+      } catch (error) {
+        console.error("❌ Error deleting user:", error);
+        alert("Failed to delete user. Please try again.");
       }
-    } catch (error) {
-      console.error("❌ Error deleting user:", error);
-      alert("Failed to delete user. Please try again.");
     }
-  }
-};
+  };
 
 
   return (

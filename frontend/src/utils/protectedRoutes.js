@@ -1,21 +1,27 @@
+// src/components/ProtectedRoute.js
+
 import { Navigate, Outlet } from 'react-router-dom';
-import {jwtDecode} from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
+import { LOGIN } from "../routes/routes"; // Importing the LOGIN constant
 
 const ProtectedRoute = ({ allowedRoles }) => {
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem('token');
 
   if (!token) {
-    return <Navigate to="/login" />;
+    // If no token is found, redirect to login
+    return <Navigate to={LOGIN} />;
   }
 
   try {
     const decodedToken = jwtDecode(token);
     if (!allowedRoles.includes(decodedToken.role)) {
-      return <Navigate to="/login" />;
+      // If the role is not authorized, redirect to login
+      return <Navigate to={LOGIN} />;
     }
   } catch (error) {
-    console.error("Invalid Token:", error);
-    return <Navigate to="/login" />;
+    console.error('Invalid Token:', error);
+    // If token decoding fails, redirect to login
+    return <Navigate to={LOGIN} />;
   }
 
   return <Outlet />;

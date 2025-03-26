@@ -3,64 +3,35 @@ import { useNavigate } from "react-router-dom";
 import { FaUser, FaFilm, FaRupeeSign } from "react-icons/fa"; // Import FaRupeeSign instead of FaDollarSign
 import Navbar from "../components/Navbar";
 import "../style/AdminDash.css";
-import { getMoviesCount, getTotalRevenue, getUserCount } from "../utils/axiosInstance";
+import { fetchUserCount, fetchMovieCount, fetchTotalRevenue } from "../services/adminDashService"; // Import services
 
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
   const [userCount, setUserCount] = useState(0);
   const [movieCount, setMovieCount] = useState(0);
-  const [totalRevenue, setTotalRevenue] = useState(0); // State for total revenue
+  const [totalRevenue, setTotalRevenue] = useState(0);
 
   useEffect(() => {
-    fetchUserCount();
-    fetchMovieCount();
-    fetchTotalRevenue();
+    fetchUserCountData();
+    fetchMovieCountData();
+    fetchTotalRevenueData();
   }, []);
 
-  
- // Function to fetch total users count
- const fetchUserCount = async () => {
-  // const token = localStorage.getItem("token");
-  // if (!token) return console.error("🚨 No token found!");
-
-  try {
-    const count = await getUserCount();
+  const fetchUserCountData = async () => {
+    const count = await fetchUserCount(); // This will call the service
     setUserCount(count);
-
-  } catch(error) {
-      console.error("❌ Error fetching user count:", error);
-  setUserCount(0);
-  }
-};
-
-// Function to fetch total movies count
-const fetchMovieCount = async () => {
-  // const token = localStorage.getItem("token");
-  // if (!token) return console.error("🚨 No token found!");
-
-  try {
-    const count = await getMoviesCount();
-    setMovieCount(count);
-} catch (error) {
-    console.error("❌ Error fetching movie count:", error);
-    setMovieCount(0);
-}
-};
-
-  // Function to fetch total revenue from all completed orders
-  const fetchTotalRevenue = async () => {
-    // const token = localStorage.getItem("token");
-    // if (!token) return console.error("🚨 No token found!");
-    try {
-      const revenue = await getTotalRevenue();
-      setTotalRevenue(revenue);
-  } catch (error) {
-      console.error("❌ Error fetching revenue:", error);
-      setTotalRevenue(0);
-  }
   };
 
+  const fetchMovieCountData = async () => {
+    const count = await fetchMovieCount(); // This will call the service
+    setMovieCount(count);
+  };
+
+  const fetchTotalRevenueData = async () => {
+    const revenue = await fetchTotalRevenue(); // This will call the service
+    setTotalRevenue(revenue);
+  };
   return (
     <>
       <Navbar />

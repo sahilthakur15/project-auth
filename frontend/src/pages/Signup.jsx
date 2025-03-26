@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-
 import { useNavigate } from 'react-router-dom';
 import "../style/Auth.css"
-import { signupUser } from '../utils/axiosInstance';
+import { registerUser } from '../services/authService';
+
 
 function Signup() {
   const [username, setName] = useState('');
@@ -12,31 +12,24 @@ function Signup() {
   const navigate = useNavigate();
 
   const dataSubmit = async (event) => {
-    event.preventDefault(); // Prevents page reload
-
-    const userData = {
-      username,
-      email,
-      password
-    };
-
+    event.preventDefault();
+  
     try {
-      const response = await signupUser(userData);
-      console.log(response);
-      alert("User registered successfully");
-
-      //reset fields
-      setName("");
-      setEmail("");
-      setPassword("");
-
-      navigate("/login");
-      
-    } catch (err) {
-      console.log("Signup failed:",err);
-      
+      const userData = { username, email, password }; // ✅ Wrap data in an object
+      const response = await registerUser(userData); // ✅ Pass as a single object
+  
+      if (response.success) {
+        alert(response.message);
+        setName(""); // ✅ Fixed function name
+        setEmail("");
+        setPassword("");
+        navigate("/login");
+      }
+    } catch (error) {
+      alert(error.message);
     }
   };
+  
 
   return (
     <div className="d-flex justify-content-center align-items-center vh-200 bg-light">
