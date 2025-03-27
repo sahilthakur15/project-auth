@@ -1,7 +1,8 @@
 // backend url
 export const BASE_URL = process.env.REACT_APP_BACKEND_URL || "http://localhost:8001/api";
 
-// pages routes
+
+// Page routes
 export const LOGIN = "/login";
 export const SIGNUP = "/";
 export const ADMIN_DASHBOARD = "/AdminDashboard";
@@ -12,29 +13,34 @@ export const MOVIE_DETAILS = "/movie-details/:_id";
 export const ORDERS = "/orders";
 export const PROFILE = "/profile";
 
-//apis routes
+export const URLS = {
+    
+     API_VERSION : "/v1",
 
 // auth apis
-export const AUTH =
+ AUTH:
 { 
-    AUTH_REGISTER : "/v1/auth/register",
-    AUTH_LOGIN : "/v1/auth/login",
-};
+    AUTH_REGISTER : "/auth/register",
+    AUTH_LOGIN : "/auth/login",
+},
 
-export const ADMIN = {
-    ALL_USERS: "/v1/admin/allusers",
-    ALL_MOVIES: "/v1/admin/allmovies",
-    GET_ALL_ORDERS: "/v1/admin/getAllOrders",
-    UPDATE_USER: "/v1/admin/updateuser",
-    DELETE_USER: "/v1/admin/deleteuser",
-    ADD_MOVIES: "/v1/admin/addmovies",
-    DELETE_MOVIE: "/v1/admin/deletemovies"
-};
+ADMIN :
+ {
+    ALL_USERS: "/admin/allusers",
+    ALL_MOVIES: "/admin/allmovies",
+    GET_ALL_ORDERS: "/admin/getAllOrders",
+    UPDATE_USER: "/admin/updateuser",
+    DELETE_USER: "/admin/deleteuser",
+    ADD_MOVIES: "/admin/addmovies",
+    DELETE_MOVIE: "/admin/deletemovies"
+},
+USER :
+{
+    ALL_MOVIES: "/user/allmovies",
+    MOVIE_DETAIL: "/user/movie",
+    BOOK_MOVIE: "/user/bookmovie",
+    UPDATE_STATUS: "/user/updatestatus",
+    GET_BOOKED_MOVIES: "/user/getbookedmovies"
+},
 
-export const USER = {
-    ALL_MOVIES: "/v1/user/allmovies",
-    MOVIE_DETAIL: "/v1/user/movie",
-    BOOK_MOVIE: "/v1/user/bookmovie",
-    UPDATE_STATUS: "/v1/user/updatestatus",
-    GET_BOOKED_MOVIES: "/v1/user/getbookedmovies"
-};
+}

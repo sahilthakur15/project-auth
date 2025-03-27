@@ -1,10 +1,10 @@
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
-import { BASE_URL, ADMIN, USER, AUTH } from "../routes/routes";
+import { BASE_URL, URLS } from "../routes/routes";
 
 // Create an axios instance
 const axiosInstance = axios.create({
-    baseURL: BASE_URL,
+    baseURL: `${BASE_URL}${URLS.API_VERSION}`,
     headers: { "Content-Type": "application/json" },
   });
   
@@ -67,7 +67,7 @@ axiosInstance.interceptors.response.use(
 // signup user function
 export const signupUser = async (userData) => {
     try {
-      const response = await axiosInstance.post(AUTH.AUTH_REGISTER, userData);
+      const response = await axiosInstance.post(URLS.AUTH.AUTH_REGISTER, userData);
       return response.data;
     } catch (error) {
       return error.response.data;
@@ -75,19 +75,29 @@ export const signupUser = async (userData) => {
   };
   
   // login user function
+  // export const loginUser = async (credentials) => {
+  //   try {
+  //     const response = await axiosInstance.post(URLS.AUTH.AUTH_LOGIN, credentials);
+  //     return response.data;
+  //   } catch (err) {
+  //     return err.response.data;
+  //   }
+  // };
+
   export const loginUser = async (credentials) => {
     try {
-      const response = await axiosInstance.post(AUTH.AUTH_LOGIN, credentials);
-      return response.data;
+        const response = await axiosInstance.post(URLS.AUTH.AUTH_LOGIN, credentials);
+        return response.data;
     } catch (err) {
-      return err.response.data;
+        return err.response?.data || { error: "Login failed" };
     }
-  };
+};
+
   
   // admin user count function
   export const getUserCount = async () => {
     try {
-      const response = await axiosInstance.get(ADMIN.ALL_USERS);
+      const response = await axiosInstance.get(URLS.ADMIN.ALL_USERS);
       return response.data?.data?.length || 0; // Ensure it returns a count
     } catch (err) {
       console.error("❌ Error fetching user count:", err.response?.data || err.message);
@@ -98,7 +108,7 @@ export const signupUser = async (userData) => {
   // admin movie count function
   export const getMoviesCount = async () => {
     try {
-      const response = await axiosInstance.get(ADMIN.ALL_MOVIES);
+      const response = await axiosInstance.get(URLS.ADMIN.ALL_MOVIES);
   
       if (Array.isArray(response.data.data)) {
         return response.data.data.length; // ✅ Correctly returning the count
@@ -115,7 +125,7 @@ export const signupUser = async (userData) => {
   // admin total revenue function
   export const getTotalRevenue = async () => {
     try {
-      const response = await axiosInstance.get(ADMIN.GET_ALL_ORDERS);
+      const response = await axiosInstance.get(URLS.ADMIN.GET_ALL_ORDERS);
   
       if (Array.isArray(response.data?.data)) {
         // Filter only completed orders
@@ -134,15 +144,27 @@ export const signupUser = async (userData) => {
   };
   
   // admin get all users
-  export const getallUsers = async () => {
-    try {
-      const response = await axiosInstance.get(ADMIN.ALL_USERS);
-      return response.data?.data || []; // Ensure it returns a count
-    } catch (err) {
-      console.error("❌ Error fetching user count:", err.response?.data || err.message);
-      return []; // Return 0 in case of an error
-    }
-  };
+  // export const getallUsers = async () => {
+  //   try {
+  //     const response = await axiosInstance.get(URLS.ADMIN.ALL_USERS);
+  //     return response.data?.data || []; // Ensure it returns a count
+  //   } catch (err) {
+  //     console.error("❌ Error fetching user count:", err.response?.data || err.message);
+  //     return []; // Return 0 in case of an error
+  //   }
+  // };
+
+  // Fetch users based on status (active or inactive)
+export const getUsersByStatus = async (status) => {
+  try {
+    const response = await axiosInstance.get(`${URLS.ADMIN.ALL_USERS}?status=${status}`);
+    return response.data?.data || [];
+  } catch (err) {
+    console.error(`❌ Error fetching ${status} users:`, err.response?.data || err.message);
+    return [];
+  }
+};
+
   
   //update roles
   export const updateUserRole = async (userId, currentRole) => {
@@ -154,7 +176,7 @@ export const signupUser = async (userData) => {
     }
   
     try {
-      const response = await axiosInstance.put(`${ADMIN.UPDATE_USER}/${userId}`);
+      const response = await axiosInstance.put(`${URLS.ADMIN.UPDATE_USER}/${userId}`);
       return response.data;
     } catch (err) {
       console.error("❌ Error updating user role:", err.response?.data || err.message);
@@ -163,27 +185,45 @@ export const signupUser = async (userData) => {
   };
   
   // Admin delete user function (Only allowed for superadmin)
-  export const removeUser = async (userId) => {
+  // export const removeUser = async (userId) => {
+  //   const role = getUserRole();
+  
+  //   if (role !== "superadmin") {
+  //     console.warn("⛔ Access Denied: Only superadmins can delete users.");
+  //     return { error: "Unauthorized action" };
+  //   }
+  
+  //   try {
+  //     const response = await axiosInstance.delete(`${URLS.ADMIN.DELETE_USER}/${userId}`);
+  //     return response.data;
+  //   } 
+  //   catch (err) {
+  //     console.error("❌ Error deleting user:", err.response?.data || err.message);
+  //     return { error: err.response?.data?.message || "Failed to delete user" };
+  //   }
+  // };
+  export const deactivateUser = async (userId) => {
     const role = getUserRole();
   
     if (role !== "superadmin") {
-      console.warn("⛔ Access Denied: Only superadmins can delete users.");
+      console.warn("⛔ Access Denied: Only superadmins can deactivate users.");
       return { error: "Unauthorized action" };
     }
   
     try {
-      const response = await axiosInstance.delete(`${ADMIN.DELETE_USER}/${userId}`);
+      const response = await axiosInstance.delete(`${URLS.ADMIN.DELETE_USER}/${userId}`);
       return response.data;
     } catch (err) {
-      console.error("❌ Error deleting user:", err.response?.data || err.message);
-      return { error: err.response?.data?.message || "Failed to delete user" };
+      console.error("❌ Error deactivating user:", err.response?.data || err.message);
+      return { error: err.response?.data?.message || "Failed to deactivate user" };
     }
   };
+  
   
   // admin fetch all movies
   export const fetchAllMovies = async () => {
     try {
-      const response = await axiosInstance.get(ADMIN.ALL_MOVIES);
+      const response = await axiosInstance.get(URLS.ADMIN.ALL_MOVIES);
       return response.data || [];
     } catch (err) {
       console.error("❌ Error fetching movies:", err.response?.data || err.message);
@@ -201,7 +241,7 @@ export const signupUser = async (userData) => {
         return { error: "Unauthorized action" };
       }
   
-      const response = await axiosInstance.delete(`${ADMIN.DELETE_MOVIE}/${movieId}`);
+      const response = await axiosInstance.delete(`${URLS.ADMIN.DELETE_MOVIE}/${movieId}`);
       return response.data;
     } catch (err) {
       console.error("❌ Error deleting movie:", err.response?.data || err.message);
@@ -212,7 +252,7 @@ export const signupUser = async (userData) => {
   // Admin add movie function
   export const addMovie = async (movieData) => {
     try {
-      const response = await axiosInstance.post(ADMIN.ADD_MOVIES, movieData);
+      const response = await axiosInstance.post(URLS.ADMIN.ADD_MOVIES, movieData);
       return response.data;
     } catch (err) {
       if (err.response?.status === 403) {
@@ -226,7 +266,7 @@ export const signupUser = async (userData) => {
   // user movies
   export const userMovies = async () => {
     try {
-      const response = await axiosInstance.get(USER.ALL_MOVIES);
+      const response = await axiosInstance.get(URLS.USER.ALL_MOVIES);
       return response.data?.data || [];
     } catch (err) {
       console.error("❌ Error fetching movies:", err.response?.data || err.message);
@@ -237,7 +277,7 @@ export const signupUser = async (userData) => {
   // user get movie detail function
   export const getMovieDetail = async (movieId) => {
     try {
-      const response = await axiosInstance.get(`${USER.MOVIE_DETAIL}/${movieId}`);
+      const response = await axiosInstance.get(`${URLS.USER.MOVIE_DETAIL}/${movieId}`);
       return response.data?.data || null;
     } catch (err) {
       console.error("❌ Error fetching movie details:", err.response?.data || err.message);
@@ -247,7 +287,7 @@ export const signupUser = async (userData) => {
   // user book movie function
   export const bookMovie = async (movieId, numTickets) => {
     try {
-      const response = await axiosInstance.post(USER.BOOK_MOVIE, {
+      const response = await axiosInstance.post(URLS.USER.BOOK_MOVIE, {
         movieId,
         numTickets,
         paymentStatus: "Pending",
@@ -264,7 +304,7 @@ export const signupUser = async (userData) => {
   // user payment function
   export const userPayment = async (orderId) => {
     try {
-      const response = await axiosInstance.put(USER.UPDATE_STATUS, {
+      const response = await axiosInstance.put(URLS.USER.UPDATE_STATUS, {
         orderId,
         paymentStatus: "Completed",
       });
@@ -287,7 +327,7 @@ export const signupUser = async (userData) => {
   // user all orders function
   export const getUserOrders = async () => {
     try {
-      const response = await axiosInstance.get(USER.GET_BOOKED_MOVIES); // No userId needed
+      const response = await axiosInstance.get(URLS.USER.GET_BOOKED_MOVIES); // No userId needed
       return response.data?.data || []; // Return user's orders
     } catch (error) {
       console.error("❌ Error fetching user orders:", error.response?.data || error.message);

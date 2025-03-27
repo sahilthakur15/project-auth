@@ -1,13 +1,16 @@
 const MESSAGES = {
     // ✅ Authentication Messages
     AUTH: {
-      LOGIN_SUCCESS: "✅ Login successful! Redirecting...",
-      LOGIN_ERROR: "❌ Invalid email or password. Please try again.",
-      SIGNUP_SUCCESS: "✅ Signup successful! You can now log in.",
-      SIGNUP_ERROR: "❌ Signup failed. Please check your details and try again.",
-      LOGOUT_SUCCESS: "✅ Logout successful.",
-      UNAUTHORIZED: "⚠️ You are not authorized to access this page.",
-      SESSION_EXPIRED: "⚠️ Session expired. Please log in again.",
+  signupSuccess: "User registered successfully",
+  signupFailure: "Signup failed. Please try again.",
+  loginSuccess: "Login successful!",
+  loginFailure: "Login failed. Please check your credentials.",
+  tokenStored: "Token & role stored successfully!",
+  invalidLoginResponse: "Invalid login response. Please try again.",
+  unauthorizedAction: "You are not authorized to perform this action.",
+  movieAdded: "Movie added successfully!",
+  movieDeleted: "Movie deleted successfully!",
+  userInactive: "Your account is inactive. Please contact support."
     },
   
     // ✅ User Management Messages (Admin Actions)

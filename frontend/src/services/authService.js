@@ -23,22 +23,31 @@ export const registerUser = async (userData) => {
 export const authenticateUser = async (email, password) => {
   try {
     const response = await loginUser({ email, password });
-    const token = response?.data?.token;
-    const role = response?.data?.user?.role;
+    console.log("🔍 Full login response:", response); // Debugging
 
-    if (token) {
-      setLocalStorage("token", token);
-      setLocalStorage("userRole", role);
-      console.log("Token & role stored:", token, role);
-
-      return { success: true ,role };
-    } else {
-      throw new Error(MESSAGES.AUTH.invalidLoginResponse);
+    if (response?.status === 403) {
+      throw new Error(response.message || "Your account is inactive. Please contact support.");
     }
+
+    const user = response?.data?.user;
+    if (!user) {
+      throw new Error("Invalid login response: User not found.");
+    }
+
+    const token = response?.data?.token;
+    if (!token) {
+      throw new Error("Invalid login response: Token missing.");
+    }
+
+    setLocalStorage("token", token);
+    setLocalStorage("userRole", user.role);
+    return { success: true, role: user.role };
   } catch (error) {
-    console.error("Login Error:", error.response?.data || error.message);
-    throw new Error(error.response?.data?.message || MESSAGES.AUTH.loginFailure);
+    console.error("❌ Login Error:", error.message);
+    throw new Error(error.message || "Login failed. Please try again.");
   }
 };
+
+
 
 

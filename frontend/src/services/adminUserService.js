@@ -1,15 +1,16 @@
-import { getallUsers, removeUser, updateUserRole } from "../utils/axiosInstance";
+import { getUsersByStatus, deactivateUser, updateUserRole } from "../utils/axiosInstance";
 
 // Fetch all users
-export const fetchUsers = async () => {
+export const fetchUsers = async (status = "active") => {
   try {
-    const users = await getallUsers();
+    const users = await getUsersByStatus(status);
     return users || [];
   } catch (error) {
-    console.error("❌ Error fetching users:", error);
+    console.error(`❌ Error fetching ${status} users:`, error);
     return [];
   }
 };
+
 
 // Update user role (admin or user)
 export const toggleUserRole = async (userId, currentRole) => {
@@ -25,12 +26,22 @@ export const toggleUserRole = async (userId, currentRole) => {
 };
 
 // Delete a user
-export const deleteUser = async (userId) => {
+// export const deleteUser = async (userId) => {
+//   try {
+//     const response = await removeUser(userId);
+//     return response;
+//   } catch (error) {
+//     console.error("❌ Error deleting user:", error);
+//     return { error: "Failed to delete user. Please try again." };
+//   }
+// };
+export const deactivateUserService = async (userId) => {
   try {
-    const response = await removeUser(userId);
+    const response = await deactivateUser(userId);
     return response;
   } catch (error) {
-    console.error("❌ Error deleting user:", error);
-    return { error: "Failed to delete user. Please try again." };
+    console.error("❌ Error deactivating user:", error);
+    return { error: "Failed to deactivate user. Please try again." };
   }
 };
+

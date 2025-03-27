@@ -18,23 +18,24 @@ const Login = () => {
     event.preventDefault();
     setLoading(true);
     setErrorMessage("");
-
+  
     try {
       const { success, role } = await authenticateUser(formData.email, formData.password);
-
+  
       if (success) {
         alert("Login Successful!");
         setFormData({ email: "", password: "" });
-
-        // Redirect based on role
+  
         navigate(role === "superadmin" || role === "admin" ? "/AdminDashboard" : "/UserDashboard");
       }
     } catch (error) {
+      alert(error.message); // ✅ Show alert for inactive user
       setErrorMessage(error.message);
     } finally {
       setLoading(false);
     }
   };
+  
 
   return (
     <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
