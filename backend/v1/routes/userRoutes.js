@@ -1,14 +1,16 @@
 const express = require("express");
 const authMiddleware = require("../middleware/authMiddleware")
 const router = express.Router(); // creating router
+const { ROUTES } = require("./routes");
+const {getAllMovies, getMovieById} = require("../controllers/movieController")
+const {bookMovie, updateStatus, compOrders} = require("../controllers/orderController")
 
-const { getAllMovies, getMovieById, bookMovie, updateStatus, compOrders }= require("../controllers/userController") 
 
-router.get("/allmovies",authMiddleware, getAllMovies); // creating route for register and login
-router.get("/movie/:id", authMiddleware, getMovieById) // creating route for register and login
-router.post("/bookmovie", authMiddleware, bookMovie) // creating route for register and login
-router.put("/updatestatus", authMiddleware, updateStatus) // creating route for register and login
-router.get("/getbookedmovies", authMiddleware, compOrders) // creating route for register and login
+router.get(ROUTES.USER_MOVIES,authMiddleware, getAllMovies); // creating route for register and login
+router.get(ROUTES.USER_GET_MOVIE, authMiddleware, getMovieById) // creating route for register and login
+router.post(ROUTES.USER_MOVIE_BOOKING, authMiddleware, bookMovie) // creating route for register and login
+router.put(ROUTES.USER_PAYMENT_STATUS, authMiddleware, updateStatus) // creating route for register and login
+router.get(ROUTES.USER_BOOKED_MOVIES, authMiddleware, compOrders) // creating route for register and login
 
 
 module.exports = router;    // exporting router

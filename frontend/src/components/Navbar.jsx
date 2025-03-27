@@ -1,12 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import "../style/Navbar.css"
+import { logoutUser } from "../services/adminDashService";
 
 export default function Navbar() {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.removeItem("Token"); // Remove token
-    navigate("/login"); // Redirect to login page
+    logoutUser(navigate("/login"));
   };
 
   return (

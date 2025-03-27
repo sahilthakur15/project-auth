@@ -74,6 +74,15 @@
     color: #555;
     margin: 4px 0;
 }
+.text-success {
+    --bs-text-opacity: 1;
+    color: #ff758c !important;
+}
+.text-danger {
+    --bs-text-opacity: 1;
+    color: #dc3545 !important;
+    margin-bottom: 25px !important;
+}
 
 /* Add User Form */
 .add-user-form {

@@ -6,7 +6,10 @@ const cors = require("cors"); // imported cors from cors package.
 const User = require("./v1/models/userModel"); // imported User model from models folder.
 const bcrypt = require("bcryptjs"); // imported bcrypt from bcrypt package.
 const adminRoutes = require("./v1/routes/adminRoutes");
-const userRoutes = require("./v1/routes/userRoutes")
+const userRoutes = require("./v1/routes/userRoutes");
+const { ROUTES } = require("./v1/routes/routes");
+const routes = require("./v1/routes/index")
+
 
 dotenv.config();
 dbConnect().then(() => {
@@ -15,35 +18,38 @@ dbConnect().then(() => {
   });
 const app = express();
 
-//cors 
-// app.use(cors({
-//   origin: ["http://localhost:3000","https://book-karo-liard.vercel.app/"], // Allow both local & deployed frontend
-//   methods: ["GET", "POST", "PUT", "DELETE"],
-//   credentials: true
-// }));
-// ✅ Fix CORS Issue
+cors 
 app.use(cors({
-  origin: "*",  // Temporary fix for all origins
+  origin: ["http://localhost:3000"], // Allow both local & deployed frontend
   methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization", "user-role"]
+  credentials: true
 }));
 
-// ✅ Alternative: Restrict to Frontend Domain (Safer)
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "https://book-karo-liard.vercel.app");
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization, user-role");
-  next();
-});
+// // ✅ Fix CORS Issue
+// app.use(cors({
+//   origin: "*",  // Temporary fix for all origins
+//   methods: ["GET", "POST", "PUT", "DELETE"],
+//   allowedHeaders: ["Content-Type", "Authorization", "user-role"]
+// }));
+
+// // ✅ Alternative: Restrict to Frontend Domain (Safer)
+// app.use((req, res, next) => {
+//   res.header("Access-Control-Allow-Origin", "https://book-karo-liard.vercel.app");
+//   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+//   res.header("Access-Control-Allow-Headers", "Content-Type, Authorization, user-role");
+//   next();
+// });
 
 
 //Middleware
 app.use(express.json());
 
 //Routes
-app.use("/api/auth", authRoutes); // using authRoutes from routes folder.
-app.use("/api/admin", adminRoutes); // using authRoutes from routes folder.
-app.use("/api/user", userRoutes); // using authRoutes from routes folder.
+app.use(routes)
+
+// app.use(ROUTES.AUTH, authRoutes); // using authRoutes from routes folder.
+// app.use(ROUTES.ADMIN, adminRoutes); // using authRoutes from routes folder.
+// app.use(ROUTES.USER, userRoutes); // using authRoutes from routes folder.
 //Super Admin
 async function createSuperadmin() {
     try {
@@ -71,8 +77,8 @@ async function createSuperadmin() {
 
 
 //Start the Server
-// const PORT = process.env.PORT || 8002;
-// app.listen(PORT, ()=>{
-//     console.log(`Server is running at port ${PORT}`)
-// });
+const PORT = process.env.PORT || 8002;
+app.listen(PORT, ()=>{
+    console.log(`Server is running at port ${PORT}`)
+});
 module.exports = app;

@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
 import "../style/Moviedetail.css";
-import { bookMovie, getMovieDetail, userPayment } from "../utils/axiosInstance";
-
+import { fetchMovieDetail, bookMovieTickets, processPayment } from "../services/movieDetailService";
 const MovieDetail = () => {
   const { _id } = useParams();
   const navigate = useNavigate();
@@ -21,9 +19,8 @@ const MovieDetail = () => {
   const [expiryDate, setExpiryDate] = useState("");
   const [cvc, setCvc] = useState("");
 
-console.log(orderId,"rim")
   useEffect(() => {
-    fetchMovieDetail();
+    fetchMovieDetailData();
   }, []);
 
   useEffect(() => {
@@ -32,10 +29,10 @@ console.log(orderId,"rim")
     }
   }, [numTickets, movie]);
 
-  const fetchMovieDetail = async () => {
+  const fetchMovieDetailData = async () => {
     setLoading(true);
     try {
-      const movieData = await getMovieDetail(_id);
+      const movieData = await fetchMovieDetail(_id);  // Use the service to fetch movie details
       setMovie(movieData);
     } catch (error) {
       setError("Failed to load movie details. Please try again.");
@@ -47,46 +44,46 @@ console.log(orderId,"rim")
   const increaseTickets = () => setNumTickets((prev) => (prev < 15 ? prev + 1 : prev));
   const decreaseTickets = () => setNumTickets((prev) => (prev > 1 ? prev - 1 : 1));
 
-
   const handleBooking = async (e) => {
     e.preventDefault();
     setMessage("");
 
     try {
-        const orderID = await bookMovie(movie._id, numTickets, totalPrice);
-        
+        const calculatedTotalPrice = movie.price * numTickets;
+
+        const orderID = await bookMovieTickets(movie._id, numTickets, calculatedTotalPrice);  // Use the service to book movie
         if (orderID) {
             setOrderId(orderID);
             alert(`🎉 Booking Successful! Order ID: ${orderID}`);
             setShowForm(false);
-            setShowPaymentModal(true); // Open payment modal after booking
+            setTimeout(() => setShowPaymentModal(true), 500);
+        } else {
+            setMessage("❌ Booking failed. Please try again.");
         }
     } catch (error) {
         setMessage("❌ Booking failed. Please try again.");
     }
 };
 
-  const handlePayment = async () => {
-    try {
-      
-  
+const handlePayment = async () => {
+  try {
       if (!orderId) {
-        alert("Order ID not found! Please book a ticket first.");
-        return;
+          setError("Order ID not found! Please book a ticket first.");
+          return;
       }
-      const isSuccess = await userPayment(orderId);
+
+      const isSuccess = await processPayment(orderId);  // Use the service to process payment
+
       if (isSuccess) {
-        alert(`🎉 Payment Successful! Order ID: ${orderId}`);
-        setShowPaymentModal(false);
+          alert(`🎉 Payment Successful! Order ID: ${orderId}`);
+          setShowPaymentModal(false);
       } else {
-        alert("❌ Payment failed. Try again.");
+          alert("❌ Payment failed. Try again.");
       }
-    } catch (error) {
-      console.error("Payment update error:", error.response?.data || error.message);
-      alert("❌ Payment update failed. Please try again.");
-    }
-  };
-  
+  } catch (error) {
+      setError("❌ Payment update failed. Please try again.");
+  }
+};
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p className="moviedetail-error-message">{error}</p>;

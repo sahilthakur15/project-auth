@@ -5,7 +5,7 @@ import "../style/Movies.css";
 import MoviesNavbar from "../components/Moviesbar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar, faFilm, faTrash, faEllipsisV } from "@fortawesome/free-solid-svg-icons";
-import { fetchAllMovies, removeMovie } from "../utils/axiosInstance";
+import { getAllMovies, deleteMovie } from "../services/adminMovieService"; // Importing service functions
 
 const Movies = () => {
   const [movies, setMovies] = useState([]);
@@ -25,35 +25,41 @@ const Movies = () => {
   const fetchMovies = async () => {
     setLoading(true);
     try {
-      const movies = await fetchAllMovies();
-      setMovies(movies);
+      const response = await getAllMovies();
+      console.log("Movies fetched:", response);
+      // Access the movies from the 'data' key
+      if (response && response.data) {
+        setMovies(response.data);  // Set movies to the array inside 'data'
+      } else {
+        setMovies([]);  // In case response doesn't have 'data' or is invalid
+      }
     } catch (error) {
       console.error("Error fetching movies:", error);
-      setMovies([]);
+      setMovies([]); // Default to empty array on error
     } finally {
       setLoading(false);
     }
   };
+  
+  
 
   const handleDeleteMovie = async (movieId) => {
     if (window.confirm("Are you sure you want to delete this movie?")) {
-        try {
-            const response = await removeMovie(movieId);
+      try {
+        const response = await deleteMovie(movieId); // Use the deleteMovie service
 
-            if (response?.error) {
-                alert(response.error); // Alert if unauthorized
-            } else {
-                alert("✅ Movie deleted successfully!");
-                fetchMovies(); // Refresh movie list
-            }
-        } catch (error) {
-            console.error("❌ Error deleting movie:", error);
-            alert("❌ Failed to delete movie. Please try again.");
+        if (response?.error) {
+          alert(response.error); // Alert if unauthorized
+        } else {
+          alert("✅ Movie deleted successfully!");
+          fetchMovies(); // Refresh movie list
         }
+      } catch (error) {
+        console.error("❌ Error deleting movie:", error);
+        alert("❌ Failed to delete movie. Please try again.");
+      }
     }
-};
-
-
+  };
 
   const toggleMenu = (movieId) => {
     console.log(`Toggling menu for: ${movieId}`); // ✅ Debug log

@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt, faClock } from "@fortawesome/free-solid-svg-icons";
 import "../style/OrderPage.css"; // Ensure this file includes the appropriate styles
 import { jwtDecode } from "jwt-decode";  // Correct named import
-import { getuserOrders } from "../utils/axiosInstance";
+import { fetchOrdersByUserId } from "../services/orderService";
 
 const OrderPage = () => {
   const [orders, setOrders] = useState([]);
@@ -37,17 +37,26 @@ const OrderPage = () => {
     }
   }, [userId]);
 
-  // Function to fetch orders based on userId
+  // Function to fetch orders based on userId using the service
   const fetchOrders = async () => {
+    setLoading(true);
+
     try {
-      const ordersData = await getuserOrders();
-      setOrders(ordersData);
+      const ordersData = await fetchOrdersByUserId();  // Use the service to fetch orders
+      if (ordersData && ordersData.length > 0) {
+        setOrders(ordersData);
+      } else {
+        setOrders([]);
+        setError("No orders found.");
+      }
     } catch (error) {
-      setError("Failed to fetch orders");
+      console.error("❌ Error fetching user orders:", error.message);
+      setError("Failed to fetch orders. Please try again.");
     } finally {
       setLoading(false);
     }
   };
+
 
   return (
     <div className="order-page-container">
@@ -61,7 +70,8 @@ const OrderPage = () => {
       ) : (
         <div className="orders-list">
           {orders.map((order) => (
-            <div key={order._id} className="order-card">
+           <div key={order.orderId} className="order-card">
+
               <div className="order-header">
                 <img src={order.movieId.posterUrl} alt={order.movieId.title} className="order-poster" />
                 <h2>{order.movieId.title}</h2>
@@ -74,7 +84,8 @@ const OrderPage = () => {
                   <FontAwesomeIcon icon={faClock} className="icon" /> Time: {new Date(order.createdAt).toLocaleTimeString()}
                 </p>
                 <p>Total Price: ₹{order.totalPrice}</p>
-                <p>No. of Tickets: {order.ticketCount}</p> {/* Display ticket count */}
+                <p>No. of Tickets: {order.numTickets}</p>
+
                 <p>Status: {order.paymentStatus}</p>
               </div>
             </div>
