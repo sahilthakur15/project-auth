@@ -1,7 +1,7 @@
 require("dotenv").config();
 const APIResponse = require("../utilites/apiResponse");
 const Messages = require("../utilites/message");
-const movieService = require("../services/movieservice");
+const movieService = require("../services/movieService");
 
 
 // Add a new movie
