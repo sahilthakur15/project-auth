@@ -84,27 +84,28 @@ const updateUser = async (req, res) => {
 // delete user
 const deleteUser = async (req, res) => {
     try {
-        // Ensure only superadmin can delete users
+        // Ensure only superadmin can update user status
         if (req.user.role !== "superadmin") {
-            return APIResponse.error(res, { status: 403, message: Messages.ADMIN.DELETE_FORBIDDEN});
+            return APIResponse.error(res, { status: 403, message: Messages.ADMIN.DELETE_FORBIDDEN });
         }
 
         const { id } = req.params;
 
-        // Check if user exists before deleting
+        // Check if user exists
         const user = await userService.getUserById(id);
         if (!user) {
-            return APIResponse.error(res, { status: 404, message:Messages.USER.NOT_FOUND});
+            return APIResponse.error(res, { status: 404, message: Messages.USER.NOT_FOUND });
         }
 
-        // Delete user
-        await userService.deleteUser(id);
+        // Update user status to inactive (soft delete)
+        await userService.updateUserStatus(id, "inactive");
 
-        return APIResponse.success(res, { status: 200, message: Messages.ADMIN.DELETE_SUCCESS});
+        return APIResponse.success(res, { status: 200, message: Messages.ADMIN.DELETE_SUCCESS });
     } catch (err) {
         return APIResponse.error(res, { status: 500, message: Messages.SYSTEM.SERVER_ERROR, data: err.message });
-    };
+    }
 };
+
 
 
 

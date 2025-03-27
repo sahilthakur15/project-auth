@@ -15,6 +15,12 @@ const userSchema = new mongoose.Schema({     // creating a schema
         type:String, 
         required:true,
     },
+    status: {  // New field for user status
+        type: String,
+        enum: ["active", "inactive"],
+        default: "active"  // All new users will be active by default
+    },
+    
     role:{
         type:String,
         required:true,

@@ -89,6 +89,10 @@ const login = async (req, res) => {
         message: Messages.USER.NOT_FOUND,
       });
     }
+          // Check if the user is inactive
+          if (user.status === "inactive") {
+            return APIResponse.error(res, { status: 403, message: "Your account is inactive. Please contact support." });
+        }
 
     console.log("User found:", user);
 
@@ -116,6 +120,7 @@ const login = async (req, res) => {
           username: user.username,
           email: user.email,
           role: user.role,
+          status: user.status,
         },
         token,
       },

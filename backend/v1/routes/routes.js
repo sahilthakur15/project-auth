@@ -1,8 +1,8 @@
 const ROUTES = {
 
-      AUTH: "/api/v1/auth",
-      ADMIN:"/api/v1/admin",
-      USER:"/api/v1/user",
+      AUTH: "/auth",
+      ADMIN:"/admin",
+      USER:"/user",
 
 
 

@@ -16,15 +16,16 @@ const updateUserRole  = async (id, newRole) => {
     return await User.findByIdAndUpdate(id, {role:newRole}, {new : true});
 };
 
-// delete user
-const deleteUser = async (id) => {
-    return await User.findByIdAndDelete(id);
+// Soft delete user by updating status to "inactive"
+const updateUserStatus = async (id, status) => {
+    return await User.findByIdAndUpdate(id, { status }, { new: true });
 };
+
 
 
 module.exports = {
     getAllUser,
     getUserById,
     updateUserRole,
-    deleteUser,
+    updateUserStatus,
 }

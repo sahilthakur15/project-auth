@@ -8,6 +8,7 @@ const bcrypt = require("bcryptjs"); // imported bcrypt from bcrypt package.
 const adminRoutes = require("./v1/routes/adminRoutes");
 const userRoutes = require("./v1/routes/userRoutes");
 const { ROUTES } = require("./v1/routes/routes");
+const routes = require("./v1/routes/index")
 
 
 dotenv.config();
@@ -44,9 +45,11 @@ app.use(cors({
 app.use(express.json());
 
 //Routes
-app.use(ROUTES.AUTH, authRoutes); // using authRoutes from routes folder.
-app.use(ROUTES.ADMIN, adminRoutes); // using authRoutes from routes folder.
-app.use(ROUTES.USER, userRoutes); // using authRoutes from routes folder.
+app.use(routes)
+
+// app.use(ROUTES.AUTH, authRoutes); // using authRoutes from routes folder.
+// app.use(ROUTES.ADMIN, adminRoutes); // using authRoutes from routes folder.
+// app.use(ROUTES.USER, userRoutes); // using authRoutes from routes folder.
 //Super Admin
 async function createSuperadmin() {
     try {
