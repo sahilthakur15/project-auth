@@ -9,13 +9,13 @@ export const registerUser = async (userData) => {
     console.log("Signup Response:", response);
 
     if (response.status === 201) {
-      return { success: true, message: MESSAGES.AUTH.SIGNUP_SUCCESS };
+      return { success: true, message: MESSAGES.AUTH.signupSuccess };
     } else {
-      throw new Error(MESSAGES.AUTH.SIGNUP_ERROR);
+      throw new Error(MESSAGES.AUTH.signupFailure);
     }
   } catch (error) {
     console.error("Signup Error:", error.response?.data?.message || error.message);
-    throw new Error(error.response?.data?.message || MESSAGES.AUTH.SIGNUP_ERROR);
+    throw new Error(error.response?.data?.message || MESSAGES.AUTH.signupFailure);
   }
 };
 

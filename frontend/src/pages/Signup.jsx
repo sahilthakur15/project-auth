@@ -1,26 +1,49 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
-import "../style/Auth.css"
+import { Link, useNavigate } from 'react-router-dom';
+import "../style/Auth.css";
 import { registerUser } from '../services/authService';
 
+// Validation regex patterns
+const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+const fullNameRegex = /^[a-zA-Z\s]{3,50}$/;
 
 function Signup() {
   const [username, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [errors, setErrors] = useState({});
   const navigate = useNavigate();
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!fullNameRegex.test(username)) {
+      newErrors.username = "Full name must be 3-50 characters and contain only letters and spaces.";
+    }
+    if (!emailRegex.test(email)) {
+      newErrors.email = "Invalid email format.";
+    }
+    if (!passwordRegex.test(password)) {
+      newErrors.password = "Password must be at least 8 characters, include one uppercase, one lowercase, one number, and one special character.";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const dataSubmit = async (event) => {
     event.preventDefault();
-  
+    
+    if (!validateForm()) return;
+
     try {
-      const userData = { username, email, password }; // ✅ Wrap data in an object
-      const response = await registerUser(userData); // ✅ Pass as a single object
-  
+      const userData = { username, email, password };
+      const response = await registerUser(userData);
+
       if (response.success) {
         alert(response.message);
-        setName(""); // ✅ Fixed function name
+        setName("");
         setEmail("");
         setPassword("");
         navigate("/login");
@@ -29,7 +52,6 @@ function Signup() {
       alert(error.message);
     }
   };
-  
 
   return (
     <div className="d-flex justify-content-center align-items-center vh-200 bg-light">
@@ -45,6 +67,7 @@ function Signup() {
               value={username}
               onChange={(e) => setName(e.target.value)} 
             />
+            {errors.username && <small className="text-danger">{errors.username}</small>}
           </div>
           <div className="mb-3">
             <label className="form-label">Email</label>
@@ -55,6 +78,7 @@ function Signup() {
               value={email}
               onChange={(e) => setEmail(e.target.value)} 
             />
+            {errors.email && <small className="text-danger">{errors.email}</small>}
           </div>
           <div className="mb-3">
             <label className="form-label">Password</label>
@@ -65,6 +89,7 @@ function Signup() {
               value={password}
               onChange={(e) => setPassword(e.target.value)} 
             />
+            {errors.password && <small className="text-danger">{errors.password}</small>}
           </div>
           <button type="submit" className="btn btn-primary w-100">Sign Up</button>
         </form>
