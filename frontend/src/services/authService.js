@@ -25,8 +25,9 @@ export const authenticateUser = async (email, password) => {
     const response = await loginUser({ email, password });
     console.log("🔍 Full login response:", response); // Debugging
 
-    if (response?.status === 403) {
-      throw new Error(response.message || "Your account is inactive. Please contact support.");
+    // Check if loginUser returned an error message
+    if (response.error) {
+      throw new Error(response.message || "Login failed. Please try again.");
     }
 
     const user = response?.data?.user;
@@ -41,12 +42,14 @@ export const authenticateUser = async (email, password) => {
 
     setLocalStorage("token", token);
     setLocalStorage("userRole", user.role);
+
     return { success: true, role: user.role };
   } catch (error) {
-    console.error("❌ Login Error:", error.message);
+    console.error("❌ Login Error:", error);
     throw new Error(error.message || "Login failed. Please try again.");
   }
 };
+
 
 
 

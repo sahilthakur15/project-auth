@@ -9,8 +9,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "../style/Userdash.css";
 import { fetchMoviesService, getUserDetails } from "../services/userDashService";
-
-
+import Loader from "../utils/Loader"; // Assuming you have a Loader component
 
 const UserDash = () => {
   const [movies, setMovies] = useState([]);
@@ -32,14 +31,14 @@ const UserDash = () => {
   }, []);
 
   const fetchMovies = async () => {
-    setLoading(true);
+    setLoading(true); // Set loading to true when fetching movies
     try {
       const movies = await fetchMoviesService();
       setMovies(movies);
     } catch (error) {
       setError("Failed to load movies. Please try again later.");
     } finally {
-      setLoading(false);
+      setLoading(false); // Set loading to false once movies are fetched or on error
     }
   };
 
@@ -48,6 +47,7 @@ const UserDash = () => {
     setUserName(user.username);
     setUserId(user.userId);
   };
+  
   const handleLogout = () => {
     removeLocalStorage("token");
     removeLocalStorage("userRole");
@@ -55,7 +55,6 @@ const UserDash = () => {
 
     navigate("/login"); // Redirect to login page
   };
-
 
   // Close profile dropdown when clicking outside
   useEffect(() => {
@@ -81,13 +80,13 @@ const UserDash = () => {
   return (
     <div className="userdash-container">
       <nav className="userdash-navbar">
-      <h1 className="movies-navbar-title">
-  <img 
-    src="https://media.licdn.com/dms/image/v2/D4D3DAQExvhSHO7vvhQ/image-scale_191_1128/image-scale_191_1128/0/1706972400034/book_karo_cover?e=2147483647&v=beta&t=-UDjCOjg-Qd1EcfVG5q0BZYCWGK_etLmtaywvf-mQ6c" 
-    alt="Book-Karo Logo" 
-    className="movies-navbar-logo"
-  />
-</h1>
+        <h1 className="movies-navbar-title">
+          <img 
+            src="https://media.licdn.com/dms/image/v2/D4D3DAQExvhSHO7vvhQ/image-scale_191_1128/image-scale_191_1128/0/1706972400034/book_karo_cover?e=2147483647&v=beta&t=-UDjCOjg-Qd1EcfVG5q0BZYCWGK_etLmtaywvf-mQ6c" 
+            alt="Book-Karo Logo" 
+            className="movies-navbar-logo"
+          />
+        </h1>
 
         <div className="navbar-right">
           <div className="profile-container">
@@ -108,7 +107,7 @@ const UserDash = () => {
               </button>
               <button onClick={() => navigate("/orders")}>
                 <FontAwesomeIcon icon={faFilm} className="dropdown-icon" /> Orders
-                </button>
+              </button>
               <button onClick={handleLogout}>
                 <FontAwesomeIcon icon={faRightFromBracket} className="dropdown-icon" /> Logout
               </button>
@@ -155,45 +154,50 @@ const UserDash = () => {
       </div>
 
       <div className="userdash-movies">
-        {loading && <p>Loading movies...</p>}
-        {error && <p className="error">{error}</p>}
-
-        {(selectedCategory === "All" || selectedCategory === "Upcoming") && upcomingMovies.length > 0 && (
-          <div className="movie-section">
-            <h2 className="section-heading">Upcoming Movies</h2>
-            <div className="movie-grid">
-              {upcomingMovies.map((movie) => (
-                <div key={movie._id} className="movie-card" onClick={() => navigate(`/movie-details/${movie._id}`)}>
-                  <img src={movie.posterUrl} alt={movie.title} className="movies-poster" />
-                  <h3>{movie.title}</h3>
-                  <p><FontAwesomeIcon icon={faStar} className="icon-star" /> {movie.rating}</p>
-                  <p><FontAwesomeIcon icon={faFilm} className="icon-genre" /> {movie.genre}</p>
+        {loading ? (
+          <Loader /> // Show loader while movies are being fetched
+        ) : error ? (
+          <p className="error">{error}</p>
+        ) : (
+          <>
+            {(selectedCategory === "All" || selectedCategory === "Upcoming") && upcomingMovies.length > 0 && (
+              <div className="movie-section">
+                <h2 className="section-heading">Upcoming Movies</h2>
+                <div className="movie-grid">
+                  {upcomingMovies.map((movie) => (
+                    <div key={movie._id} className="movie-card" onClick={() => navigate(`/movie-details/${movie._id}`)}>
+                      <img src={movie.posterUrl} alt={movie.title} className="movies-poster" />
+                      <h3>{movie.title}</h3>
+                      <p><FontAwesomeIcon icon={faStar} className="icon-star" /> {movie.rating}</p>
+                      <p><FontAwesomeIcon icon={faFilm} className="icon-genre" /> {movie.genre}</p>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          </div>
-        )}
+              </div>
+            )}
 
-        {(selectedCategory === "All" || selectedCategory === "Now Playing") && nowPlayingMovies.length > 0 && (
-          <div className="movie-section">
-            <h2 className="section-heading">Now Playing</h2>
-            <div className="movie-grid">
-              {nowPlayingMovies.map((movie) => (
-                <div key={movie._id} className="movie-card" onClick={() => navigate(`/movie-details/${movie._id}`)}>
-                  <img src={movie.posterUrl} alt={movie.title} className="movies-poster" />
-                  <h3>{movie.title}</h3>
-                  <p><FontAwesomeIcon icon={faStar} className="icon-star" /> {movie.rating}</p>
-                  <p><FontAwesomeIcon icon={faFilm} className="icon-genre" /> {movie.genre}</p>
+            {(selectedCategory === "All" || selectedCategory === "Now Playing") && nowPlayingMovies.length > 0 && (
+              <div className="movie-section">
+                <h2 className="section-heading">Now Playing</h2>
+                <div className="movie-grid">
+                  {nowPlayingMovies.map((movie) => (
+                    <div key={movie._id} className="movie-card" onClick={() => navigate(`/movie-details/${movie._id}`)}>
+                      <img src={movie.posterUrl} alt={movie.title} className="movies-poster" />
+                      <h3>{movie.title}</h3>
+                      <p><FontAwesomeIcon icon={faStar} className="icon-star" /> {movie.rating}</p>
+                      <p><FontAwesomeIcon icon={faFilm} className="icon-genre" /> {movie.genre}</p>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          </div>
+              </div>
+            )}
+          </>
         )}
 
         {orders.length > 0 && (
           <div className="orders-section">
             <h2>Your Orders</h2>
-            {loadingOrders ? <p>Loading orders...</p> : orders.map((order) => (
+            {loadingOrders ? <Loader /> : orders.map((order) => (
               <div key={order._id} className="order-card">
                 <h3>{order.movieId.title}</h3>
                 <p>Status: {order.paymentStatus}</p>

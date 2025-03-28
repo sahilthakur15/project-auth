@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt, faClock } from "@fortawesome/free-solid-svg-icons";
-import "../style/OrderPage.css"; // Ensure this file includes the appropriate styles
 import { jwtDecode } from "jwt-decode";  // Correct named import
 import { fetchOrdersByUserId } from "../services/orderService";
+import Loader from "../utils/Loader"; // Import the loader component
+import "../style/OrderPage.css"; // Ensure this file includes the appropriate styles
 
 const OrderPage = () => {
   const [orders, setOrders] = useState([]);
@@ -57,12 +56,12 @@ const OrderPage = () => {
     }
   };
 
-
   return (
     <div className="order-page-container">
       <h1>Your Orders</h1>
 
-      {loading && <p>Loading orders...</p>}
+      {loading && <Loader />} {/* Use the loader component */}
+
       {error && <p className="error">{error}</p>}
 
       {orders.length === 0 ? (
@@ -70,8 +69,7 @@ const OrderPage = () => {
       ) : (
         <div className="orders-list">
           {orders.map((order) => (
-           <div key={order.orderId} className="order-card">
-
+            <div key={order.orderId} className="order-card">
               <div className="order-header">
                 <img src={order.movieId.posterUrl} alt={order.movieId.title} className="order-poster" />
                 <h2>{order.movieId.title}</h2>
@@ -85,7 +83,6 @@ const OrderPage = () => {
                 </p>
                 <p>Total Price: ₹{order.totalPrice}</p>
                 <p>No. of Tickets: {order.numTickets}</p>
-
                 <p>Status: {order.paymentStatus}</p>
               </div>
             </div>
