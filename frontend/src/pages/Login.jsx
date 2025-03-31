@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Toaster, toast } from "react-hot-toast";
 import { authenticateUser } from "../services/authService";
+import Loader from "../utils/Loader";
 
 // Validation regex patterns
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -83,50 +84,54 @@ const Login = () => {
 
   return (
     <>
-       {/* Ensures toast notifications appear */}
-      <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
       <Toaster position="top-right" />
-        <div className="card p-4 shadow-sm" style={{ width: "350px" }}>
-          <h2 className="text-center mb-3">Login</h2>
-
-          <form onSubmit={dataSubmit}>
-            <div className="mb-3">
-              <label className="form-label">Email</label>
-              <input
-                type="email"
-                name="email"
-                className="form-control"
-                placeholder="Enter email"
-                value={formData.email}
-                onChange={handleChange}
-              />
-              {errors.email && <small className="text-danger">{errors.email}</small>}
-            </div>
-            <div className="mb-3">
-              <label className="form-label">Password</label>
-              <input
-                type="password"
-                name="password"
-                className="form-control"
-                placeholder="Enter password"
-                value={formData.password}
-                onChange={handleChange}
-              />
-              {errors.password && <small className="text-danger">{errors.password}</small>}
-            </div>
-
-            <button type="submit" className="btn btn-primary w-100" disabled={loading}>
-              {loading ? "Logging in..." : "Login"}
-            </button>
-          </form>
-
-          <p className="text-center mt-3">
-            Don't have an account? <Link to="/">Register here</Link>
-          </p>
-        </div>
+      <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
+        {loading ? (
+          <Loader />
+        ) : (
+          <div className="card p-4 shadow-sm" style={{ width: "350px" }}>
+            <h2 className="text-center mb-3">Login</h2>
+  
+            <form onSubmit={dataSubmit}>
+              <div className="mb-3">
+                <label className="form-label">Email</label>
+                <input
+                  type="email"
+                  name="email"
+                  className="form-control"
+                  placeholder="Enter email"
+                  value={formData.email}
+                  onChange={handleChange}
+                />
+                {errors.email && <small className="text-danger">{errors.email}</small>}
+              </div>
+              <div className="mb-3">
+                <label className="form-label">Password</label>
+                <input
+                  type="password"
+                  name="password"
+                  className="form-control"
+                  placeholder="Enter password"
+                  value={formData.password}
+                  onChange={handleChange}
+                />
+                {errors.password && <small className="text-danger">{errors.password}</small>}
+              </div>
+  
+              <button type="submit" className="btn btn-primary w-100">
+                Login
+              </button>
+            </form>
+  
+            <p className="text-center mt-3">
+              Don't have an account? <Link to="/">Register here</Link>
+            </p>
+          </div>
+        )}
       </div>
     </>
   );
+  
 };
 
 export default Login;

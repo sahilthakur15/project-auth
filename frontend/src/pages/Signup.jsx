@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Toaster, toast } from 'react-hot-toast';
 import "../style/Auth.css";
 import { registerUser } from '../services/authService';
+import Loader from '../utils/Loader';
 
 // Validation regex patterns
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -65,53 +66,76 @@ function Signup() {
 
   return (
     <>
-      <Toaster position="top-right" /> {/* Ensure Toaster is present */}
+      <Toaster position="top-right" />
       <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
-        <div className="card p-4 shadow-sm" style={{ width: "350px" }}>
-          <h2 className="text-center mb-3">Sign Up</h2>
-          <form onSubmit={dataSubmit}>
-            <div className="mb-3">
-              <label className="form-label">Username</label>
-              <input 
-                type="text" 
-                className="form-control" 
-                placeholder="Enter name" 
-                value={username}
-                onChange={(e) => setName(e.target.value)} 
-              />
-              {errors.username && <small className="text-danger">{errors.username}</small>}
-            </div>
-            <div className="mb-3">
-              <label className="form-label">Email</label>
-              <input 
-                type="email" 
-                className="form-control" 
-                placeholder="Enter email" 
-                value={email}
-                onChange={(e) => setEmail(e.target.value)} 
-              />
-              {errors.email && <small className="text-danger">{errors.email}</small>}
-            </div>
-            <div className="mb-3">
-              <label className="form-label">Password</label>
-              <input 
-                type="password" 
-                className="form-control" 
-                placeholder="Enter password" 
-                value={password}
-                onChange={(e) => setPassword(e.target.value)} 
-              />
-              {errors.password && <small className="text-danger">{errors.password}</small>}
-            </div>
-            <button type="submit" className="btn btn-primary w-100">Sign Up</button>
-          </form>
-          <p className="text-center mt-3">
-            Already have an account? <Link to="/login">Login</Link>
-          </p>
-        </div>
+        {loading ? (
+          <Loader />
+        ) : (
+          <div className="card p-4 shadow-sm" style={{ width: "350px" }}>
+            <h2 className="text-center mb-3">Sign Up</h2>
+            <form onSubmit={dataSubmit}>
+              <div className="mb-3">
+                <label className="form-label">Username</label>
+                <input
+                  type="text"
+                  name="username"
+                  className="form-control"
+                  placeholder="Enter name"
+                  value={formData.username}
+                  onChange={handleChange}
+                />
+                {errors.username && <small className="text-danger">{errors.username}</small>}
+              </div>
+  
+              <div className="mb-3">
+                <label className="form-label">Email</label>
+                <input
+                  type="email"
+                  name="email"
+                  className="form-control"
+                  placeholder="Enter email"
+                  value={formData.email}
+                  onChange={handleChange}
+                />
+                {errors.email && <small className="text-danger">{errors.email}</small>}
+              </div>
+  
+              <div className="mb-3">
+                <label className="form-label">Password</label>
+                <div className="input-group">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    name="password"
+                    className="form-control"
+                    placeholder="Enter password"
+                    value={formData.password}
+                    onChange={handleChange}
+                  />
+                  <button
+                    type="button"
+                    className="btn btn-outline-secondary"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  </button>
+                </div>
+                {errors.password && <small className="text-danger">{errors.password}</small>}
+              </div>
+  
+              <button type="submit" className="btn btn-primary w-100">
+                Sign Up
+              </button>
+            </form>
+  
+            <p className="text-center mt-3">
+              Already have an account? <Link to="/login">Login</Link>
+            </p>
+          </div>
+        )}
       </div>
     </>
   );
+  
 }
 
 export default Signup;

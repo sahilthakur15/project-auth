@@ -50,7 +50,6 @@ const OrderPage = () => {
       }
     } catch (error) {
       console.error("❌ Error fetching user orders:", error.message);
-      setError("Failed to fetch orders. Please try again.");
     } finally {
       setLoading(false);
     }
