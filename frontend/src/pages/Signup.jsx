@@ -4,6 +4,7 @@ import { Toaster, toast } from 'react-hot-toast';
 import "../style/Auth.css";
 import { registerUser } from '../services/authService';
 import Loader from '../utils/Loader';
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 // Validation regex patterns
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -14,8 +15,23 @@ function Signup() {
   const [username, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);  // ✅ Fixed
+  const [showPassword, setShowPassword] = useState(false); // ✅ Fixed
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
+
+   // Handle input changes ✅ Fixed
+// This function is used to handle changes in the input fields
+   const handleChange = (e) => {
+    // Destructure the event target to get the name and value of the input field
+    const { name, value } = e.target;
+    // If the name of the input field is "username", set the name state to the value of the input field
+    if (name === "username") setName(value);
+    // If the name of the input field is "email", set the email state to the value of the input field
+    if (name === "email") setEmail(value);
+    // If the name of the input field is "password", set the password state to the value of the input field
+    if (name === "password") setPassword(value);
+  };
 
   const validateForm = () => {
     const newErrors = {};
@@ -38,7 +54,7 @@ function Signup() {
     event.preventDefault();
 
     if (!validateForm()) return;
-
+    setLoading(true);  // ✅ Start loading
     try {
       const userData = { username, email, password };
       const response = await registerUser(userData);
@@ -61,6 +77,8 @@ function Signup() {
       }
     } catch (error) {
       toast.error(error.message || "Something went wrong!");
+    }finally {
+      setLoading(false);  // ✅ Stop loading
     }
   };
 
@@ -81,7 +99,7 @@ function Signup() {
                   name="username"
                   className="form-control"
                   placeholder="Enter name"
-                  value={formData.username}
+                  value={username}
                   onChange={handleChange}
                 />
                 {errors.username && <small className="text-danger">{errors.username}</small>}
@@ -94,7 +112,7 @@ function Signup() {
                   name="email"
                   className="form-control"
                   placeholder="Enter email"
-                  value={formData.email}
+                  value={email}
                   onChange={handleChange}
                 />
                 {errors.email && <small className="text-danger">{errors.email}</small>}
@@ -108,7 +126,7 @@ function Signup() {
                     name="password"
                     className="form-control"
                     placeholder="Enter password"
-                    value={formData.password}
+                    value={password}
                     onChange={handleChange}
                   />
                   <button
