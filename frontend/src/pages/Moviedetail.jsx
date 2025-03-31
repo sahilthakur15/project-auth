@@ -2,11 +2,15 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "../style/Moviedetail.css";
 import { fetchMovieDetail, bookMovieTickets, processPayment } from "../services/movieDetailService";
+import Loader from "../utils/Loader"; // Importing the loader
+import toast from "react-hot-toast"; // Import HotToast
+import { Toaster } from "react-hot-toast"; // Import Toaster
+
 const MovieDetail = () => {
   const { _id } = useParams();
   const navigate = useNavigate();
   const [movie, setMovie] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true); // Added loading state
   const [error, setError] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
@@ -36,6 +40,7 @@ const MovieDetail = () => {
       setMovie(movieData);
     } catch (error) {
       setError("Failed to load movie details. Please try again.");
+      toast.error("❌ Failed to load movie details. Please try again."); // Show error toast
     } finally {
       setLoading(false);
     }
@@ -54,38 +59,44 @@ const MovieDetail = () => {
         const orderID = await bookMovieTickets(movie._id, numTickets, calculatedTotalPrice);  // Use the service to book movie
         if (orderID) {
             setOrderId(orderID);
-            alert(`🎉 Booking Successful! Order ID: ${orderID}`);
+            toast.success(`🎉 Booking Successful! Order ID: ${orderID}`);  // Show success toast
             setShowForm(false);
             setTimeout(() => setShowPaymentModal(true), 500);
         } else {
             setMessage("❌ Booking failed. Please try again.");
+            toast.error("❌ Booking failed. Please try again."); // Show error toast
         }
     } catch (error) {
         setMessage("❌ Booking failed. Please try again.");
+        toast.error("❌ Booking failed. Please try again."); // Show error toast
     }
-};
+  };
 
-const handlePayment = async () => {
-  try {
-      if (!orderId) {
-          setError("Order ID not found! Please book a ticket first.");
-          return;
-      }
+  const handlePayment = async () => {
+    try {
+        if (!orderId) {
+            setError("Order ID not found! Please book a ticket first.");
+            toast.error("❌ Order ID not found! Please book a ticket first."); // Show error toast
+            return;
+        }
 
-      const isSuccess = await processPayment(orderId);  // Use the service to process payment
+        const isSuccess = await processPayment(orderId);  // Use the service to process payment
 
-      if (isSuccess) {
-          alert(`🎉 Payment Successful! Order ID: ${orderId}`);
-          setShowPaymentModal(false);
-      } else {
-          alert("❌ Payment failed. Try again.");
-      }
-  } catch (error) {
-      setError("❌ Payment update failed. Please try again.");
-  }
-};
+        if (isSuccess) {
+            toast.success(`🎉 Payment Successful! Order ID: ${orderId}`);  // Show success toast
+            setShowPaymentModal(false);
+        } else {
+            toast.error("❌ Payment failed. Try again."); // Show error toast
+        }
+    } catch (error) {
+        setError("❌ Payment update failed. Please try again.");
+        toast.error("❌ Payment update failed. Please try again."); // Show error toast
+    }
+  };
 
-  if (loading) return <p>Loading...</p>;
+  // Show the loader while fetching movie details
+  if (loading) return <Loader />;
+
   if (error) return <p className="moviedetail-error-message">{error}</p>;
 
   return (
@@ -102,8 +113,6 @@ const handlePayment = async () => {
           <p><strong>Release Date:</strong> {movie.releaseDate}</p>
           <p><strong>Description:</strong> {movie.description}</p>
 
-          
-
           {movie.category === "Now Playing" && (
             <button className="moviedetail-book-btn" onClick={() => setShowForm(true)}>
               Book Now
@@ -112,8 +121,8 @@ const handlePayment = async () => {
           {movie.category === "Upcoming" && (
             <button className="moviedetail-coming-soon-btn" disabled>
               Coming Soon
-              </button>
-            )}
+            </button>
+          )}
 
           {message && <p className="moviedetail-message">{message}</p>}
         </div>
@@ -145,86 +154,86 @@ const handlePayment = async () => {
         </div>
       )}
 
-{showPaymentModal && (
-  <div className="payment-modal-overlay">
-    <div className="payment-modal">
-      <h2>Complete Your Payment</h2>
-      <p><strong>Amount:</strong> ₹{totalPrice}</p>
+      {/* Payment Modal */}
+      {showPaymentModal && (
+        <div className="payment-modal-overlay">
+          <div className="payment-modal">
+            <h2>Complete Your Payment</h2>
+            <p><strong>Amount:</strong> ₹{totalPrice}</p>
 
-      <div className="payment-card">
-        <p className="payment-amount">PAYING: ₹{totalPrice}</p>
-        <div className="card-fields">
-          
-          {/* Card Number Input */}
-          <input
-            type="text"
-            placeholder="Card Number"
-            maxLength="16"
-            value={cardNumber}
-            onChange={(e) => setCardNumber(e.target.value)}
-          />
-          {cardNumber && !/^\d{16}$/.test(cardNumber) && (
-            <p className="error-message">❌ only numbers & must be 16 digits.</p>
-          )}
+            <div className="payment-card">
+              <p className="payment-amount">PAYING: ₹{totalPrice}</p>
+              <div className="card-fields">
+                
+                {/* Card Number Input */}
+                <input
+                  type="text"
+                  placeholder="Card Number"
+                  maxLength="16"
+                  value={cardNumber}
+                  onChange={(e) => setCardNumber(e.target.value)}
+                />
+                {cardNumber && !/^\d{16}$/.test(cardNumber) && (
+                  <p className="error-message">❌ only numbers & must be 16 digits.</p>
+                )}
 
-          {/* Card Holder Name Input */}
-          <input
-            type="text"
-            placeholder="Card Holder"
-            value={cardHolder}
-            onChange={(e) => setCardHolder(e.target.value)}
-          />
-          {cardHolder && !/^[A-Za-z\s]{3,}$/.test(cardHolder) && (
-            <p className="error-message">❌ Enter a valid name (only letters, min. 3 characters).</p>
-          )}
+                {/* Card Holder Name Input */}
+                <input
+                  type="text"
+                  placeholder="Card Holder"
+                  value={cardHolder}
+                  onChange={(e) => setCardHolder(e.target.value)}
+                />
+                {cardHolder && !/^[A-Za-z\s]{3,}$/.test(cardHolder) && (
+                  <p className="error-message">❌ Enter a valid name (only letters, min. 3 characters).</p>
+                )}
 
-          <div className="small-fields">
-            {/* Expiry Date Input */}
-            <input
-              type="text"
-              placeholder="MM/YY"
-              maxLength="5"
-              value={expiryDate}
-              onChange={(e) => setExpiryDate(e.target.value)}
-            />
-            {expiryDate && !/^\d{2}\/\d{2}$/.test(expiryDate) && (
-              <p className="error-message">❌ Format: MM/YY</p>
-            )}
+                <div className="small-fields">
+                  {/* Expiry Date Input */}
+                  <input
+                    type="text"
+                    placeholder="MM/YY"
+                    maxLength="5"
+                    value={expiryDate}
+                    onChange={(e) => setExpiryDate(e.target.value)}
+                  />
+                  {expiryDate && !/^\d{2}\/\d{2}$/.test(expiryDate) && (
+                    <p className="error-message">❌ Format: MM/YY</p>
+                  )}
 
-            {/* CVC Input */}
-            <input
-              type="text"
-              placeholder="CVC"
-              maxLength="3"
-              value={cvc}
-              onChange={(e) => setCvc(e.target.value)}
-            />
-            {cvc && !/^\d{3}$/.test(cvc) && (
-              <p className="error-message">❌ CVC must be exactly 3 digits.</p>
-            )}
+                  {/* CVC Input */}
+                  <input
+                    type="text"
+                    placeholder="CVC"
+                    maxLength="3"
+                    value={cvc}
+                    onChange={(e) => setCvc(e.target.value)}
+                  />
+                  {cvc && !/^\d{3}$/.test(cvc) && (
+                    <p className="error-message">❌ CVC must be exactly 3 digits.</p>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Payment Button */}
+            <button
+              className="complete-order-btn"
+              onClick={handlePayment}
+              disabled={
+                !/^\d{16}$/.test(cardNumber) ||
+                !/^[A-Za-z\s]{3,}$/.test(cardHolder) ||
+                !/^\d{2}\/\d{2}$/.test(expiryDate) ||
+                !/^\d{3}$/.test(cvc)
+              }
+            >
+              Complete Order
+            </button>
+            <button className="cancel-order-btn" onClick={() => setShowPaymentModal(false)}>Cancel</button>
           </div>
         </div>
-      </div>
-
-      {/* Payment Button */}
-      <button
-        className="complete-order-btn"
-        onClick={handlePayment}
-        disabled={
-          !/^\d{16}$/.test(cardNumber) ||
-          !/^[A-Za-z\s]{3,}$/.test(cardHolder) ||
-          !/^\d{2}\/\d{2}$/.test(expiryDate) ||
-          !/^\d{3}$/.test(cvc)
-        }
-      >
-        Complete Order
-      </button>
-      <button className="cancel-order-btn" onClick={() => setShowPaymentModal(false)}>Cancel</button>
+      )}
     </div>
-  </div>
-)}
-</div>
-
   );
 };
 

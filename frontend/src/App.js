@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { Toaster } from "react-hot-toast"; // ✅ Import Toaster
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import AdminDashboard from './pages/Admindash';
@@ -14,6 +15,9 @@ import { LOGIN, SIGNUP, ADMIN_DASHBOARD, USERS_LIST, MOVIES_LIST, USER_DASHBOARD
 function App() {
   return (
     <Router>
+      {/* ✅ Keep Toaster outside of Routes */}
+      <Toaster position="top-right" reverseOrder={false} />
+
       <Routes>
         {/* Public Routes */}
         <Route path={LOGIN} element={<Login />} />

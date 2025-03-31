@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { Toaster, toast } from 'react-hot-toast';
 import "../style/Auth.css";
 import { registerUser } from '../services/authService';
 
@@ -34,70 +35,82 @@ function Signup() {
 
   const dataSubmit = async (event) => {
     event.preventDefault();
-    
+
     if (!validateForm()) return;
 
     try {
       const userData = { username, email, password };
       const response = await registerUser(userData);
+      console.log("API Response:", response); // Debugging
 
       if (response.success) {
-        alert(response.message);
+        toast.success(response.message || "Signup successful!");
+        
+        // Clear form fields
         setName("");
         setEmail("");
         setPassword("");
-        navigate("/login");
+
+        // Delay navigation to show toast
+        setTimeout(() => {
+          navigate("/login");
+        }, 1500);
+      } else {
+        toast.error(response.message || "Signup failed! Please try again.");
       }
     } catch (error) {
-      alert(error.message);
+      toast.error(error.message || "Something went wrong!");
     }
   };
 
   return (
-    <div className="d-flex justify-content-center align-items-center vh-200 bg-light">
-      <div className="card p-4 shadow-sm" style={{ width: "350px" }}>
-        <h2 className="text-center mb-3">Sign Up</h2>
-        <form onSubmit={dataSubmit}>
-          <div className="mb-3">
-            <label className="form-label">Username</label>
-            <input 
-              type="text" 
-              className="form-control" 
-              placeholder="Enter name" 
-              value={username}
-              onChange={(e) => setName(e.target.value)} 
-            />
-            {errors.username && <small className="text-danger">{errors.username}</small>}
-          </div>
-          <div className="mb-3">
-            <label className="form-label">Email</label>
-            <input 
-              type="email" 
-              className="form-control" 
-              placeholder="Enter email" 
-              value={email}
-              onChange={(e) => setEmail(e.target.value)} 
-            />
-            {errors.email && <small className="text-danger">{errors.email}</small>}
-          </div>
-          <div className="mb-3">
-            <label className="form-label">Password</label>
-            <input 
-              type="password" 
-              className="form-control" 
-              placeholder="Enter password" 
-              value={password}
-              onChange={(e) => setPassword(e.target.value)} 
-            />
-            {errors.password && <small className="text-danger">{errors.password}</small>}
-          </div>
-          <button type="submit" className="btn btn-primary w-100">Sign Up</button>
-        </form>
-        <p className="text-center mt-3">
-          Already have an account? <Link to="/login">Login</Link>
-        </p>
+    <>
+      <Toaster position="top-right" /> {/* Ensure Toaster is present */}
+      <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
+        <div className="card p-4 shadow-sm" style={{ width: "350px" }}>
+          <h2 className="text-center mb-3">Sign Up</h2>
+          <form onSubmit={dataSubmit}>
+            <div className="mb-3">
+              <label className="form-label">Username</label>
+              <input 
+                type="text" 
+                className="form-control" 
+                placeholder="Enter name" 
+                value={username}
+                onChange={(e) => setName(e.target.value)} 
+              />
+              {errors.username && <small className="text-danger">{errors.username}</small>}
+            </div>
+            <div className="mb-3">
+              <label className="form-label">Email</label>
+              <input 
+                type="email" 
+                className="form-control" 
+                placeholder="Enter email" 
+                value={email}
+                onChange={(e) => setEmail(e.target.value)} 
+              />
+              {errors.email && <small className="text-danger">{errors.email}</small>}
+            </div>
+            <div className="mb-3">
+              <label className="form-label">Password</label>
+              <input 
+                type="password" 
+                className="form-control" 
+                placeholder="Enter password" 
+                value={password}
+                onChange={(e) => setPassword(e.target.value)} 
+              />
+              {errors.password && <small className="text-danger">{errors.password}</small>}
+            </div>
+            <button type="submit" className="btn btn-primary w-100">Sign Up</button>
+          </form>
+          <p className="text-center mt-3">
+            Already have an account? <Link to="/login">Login</Link>
+          </p>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 
