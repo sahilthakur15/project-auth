@@ -3,6 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { Toaster, toast } from "react-hot-toast";
 import { authenticateUser } from "../services/authService";
 import Loader from "../utils/Loader";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 // Validation regex patterns
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -13,6 +14,7 @@ const Login = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   // Handle input changes
@@ -24,13 +26,12 @@ const Login = () => {
   const validateForm = () => {
     const newErrors = {};
 
-    // Check if email is in correct format
     if (!emailRegex.test(formData.email)) {
       newErrors.email = "Invalid email format.";
     }
-    // Check if password is in correct format
     if (!passwordRegex.test(formData.password)) {
-      newErrors.password = "Password must be at least 8 characters, include one uppercase, one lowercase, one number, and one special character.";
+      newErrors.password =
+        "Password must be at least 8 characters, include one uppercase, one lowercase, one number, and one special character.";
     }
 
     setErrors(newErrors);
@@ -41,18 +42,17 @@ const Login = () => {
     event.preventDefault();
     setLoading(true);
     setErrors({});
-  
-    // Validate form (but don't block API call)
+
     validateForm();
-  
+
     try {
       const response = await authenticateUser(formData.email, formData.password);
       console.log("API Response:", response);
-  
+
       if (response?.success) {
         toast.success(response.message || "Login Successful!");
         setFormData({ email: "", password: "" });
-  
+
         setTimeout(() => {
           navigate(response.role === "superadmin" || response.role === "admin" ? "/AdminDashboard" : "/UserDashboard");
         }, 1500);
@@ -61,26 +61,12 @@ const Login = () => {
       }
     } catch (error) {
       console.error("Login error:", error);
-  
-      // Handle different error cases
-      let errorMessage = "Something went wrong! Please try again.";
-      if (error.response) {
-        // Backend responded with an error
-        errorMessage = error.response.data?.message || "Invalid credentials.";
-      } else if (error.request) {
-        // Request made but no response received
-        errorMessage = "Server is not responding. Please try again later.";
-      } else {
-        // Other errors
-        errorMessage = error.message || "An unknown error occurred.";
-      }
-  
+      let errorMessage = error.response?.data?.message || "Something went wrong! Please try again.";
       toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
   };
-  
 
   return (
     <>
@@ -91,7 +77,7 @@ const Login = () => {
         ) : (
           <div className="card p-4 shadow-sm" style={{ width: "350px" }}>
             <h2 className="text-center mb-3">Login</h2>
-  
+
             <form onSubmit={dataSubmit}>
               <div className="mb-3">
                 <label className="form-label">Email</label>
@@ -105,24 +91,34 @@ const Login = () => {
                 />
                 {errors.email && <small className="text-danger">{errors.email}</small>}
               </div>
+
               <div className="mb-3">
                 <label className="form-label">Password</label>
-                <input
-                  type="password"
-                  name="password"
-                  className="form-control"
-                  placeholder="Enter password"
-                  value={formData.password}
-                  onChange={handleChange}
-                />
+                <div className="input-group">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    name="password"
+                    className="form-control"
+                    placeholder="Enter password"
+                    value={formData.password}
+                    onChange={handleChange}
+                  />
+                  <button
+                    type="button"
+                    className="btn btn-outline-secondary"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  </button>
+                </div>
                 {errors.password && <small className="text-danger">{errors.password}</small>}
               </div>
-  
+
               <button type="submit" className="btn btn-primary w-100">
                 Login
               </button>
             </form>
-  
+
             <p className="text-center mt-3">
               Don't have an account? <Link to="/">Register here</Link>
             </p>
@@ -131,7 +127,6 @@ const Login = () => {
       </div>
     </>
   );
-  
 };
 
 export default Login;
