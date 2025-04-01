@@ -72,13 +72,20 @@ const getCompletedOrders = async (userId) => {
             paymentStatus: "Completed", 
             userId: userId // Filter by userId
         })
-        .populate("userId", "username email")
-        .populate("movieId", "title posterUrl")
+        .populate({
+            path: "userId",
+            select: "username email"
+        })
+        .populate({
+            path: "movieId",
+            select: "title posterUrl",
+            options: { strictPopulate: false } // Prevent errors if movieId is missing
+        })
         .select("numTickets totalPrice paymentStatus createdAt")
         .exec();
 
         if (completedOrders.length === 0) {
-            throw new Error(Messages.ORDERS.NO_COMPLETED_ORDERS);
+            throw new Error("No completed orders found.");
         }
 
         return completedOrders;
@@ -87,6 +94,7 @@ const getCompletedOrders = async (userId) => {
         throw error;
     }
 };
+
 
 
 

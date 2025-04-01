@@ -1,4 +1,6 @@
-const User = require("../models/userModel")
+const User = require("../models/userModel");
+const APIResponse = require("../utilites/apiResponse");
+const Messages = require("../utilites/message");
 
 
 // get all users
@@ -21,6 +23,14 @@ const updateUserStatus = async (id, status) => {
     return await User.findByIdAndUpdate(id, { status }, { new: true });
 };
 
+// edit profile
+const updateUserProfile = async (userId, updateData) => {
+       // Find the user by ID
+        const user = await User.findByIdAndUpdate(userId, updateData ,{new:true});
+        return user;
+};
+  
+
 
 
 module.exports = {
@@ -28,4 +38,5 @@ module.exports = {
     getUserById,
     updateUserRole,
     updateUserStatus,
+    updateUserProfile,
 }

@@ -81,7 +81,7 @@ const updateUser = async (req, res) => {
 };
 
 
-// delete user
+// user status 
 const deleteUser = async (req, res) => {
     try {
         // Ensure only superadmin can update user status
@@ -106,6 +106,27 @@ const deleteUser = async (req, res) => {
     }
 };
 
+//edit profile 
+const updateProfile = async (req, res) => {
+    try {
+      const userId = req.user.id;  // Extracted from the JWT token
+      const  updateData  = req.body; // The data to update (e.g., username, email, etc.)
+  
+      // Validate that the update data is present
+      if (!updateData) {
+        return APIResponse.error(res,{ status: 400, message: 'Update data is required.' });
+      }
+  
+      // Call the service to update the user profile
+      const updatedUser = await userService.updateUserProfile(userId, updateData);
+  
+      // Return the updated user data in the response
+      return APIResponse.success(res,{ status:200, message: 'User profile updated successfully', data: updatedUser });
+    } catch (error) {
+      console.error(error);
+      return APIResponse.error(res,{ status: 500, message: error.message });
+    }
+  };
 
 
 
@@ -114,6 +135,7 @@ module.exports = {
     getUserByID,
     updateUser,
     deleteUser,
+    updateProfile,
 }
 
 // Create a new booking (book a movie)

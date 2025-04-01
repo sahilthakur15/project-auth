@@ -47,21 +47,84 @@ const getAllMovies = async (req, res) => {
   }
 };
 
-// Delete Movies
-const deleteMovies = async (req, res) => {
-    try {
-        const { id } = req.params;
-        console.log("Deleting movie with ID:", id);  // ✅ Debugging log
-        
-        const deletedMovie = await movieService.deleteMovieById(id);  // ✅ Fix variable name
-        if (!deletedMovie) {
-            return APIResponse.error(res,{status:404, message: Messages.MOVIES.MOVIE_NOT_FOUND});
-        }
-        return APIResponse.success(res,{status:200, message: Messages.MOVIES.MOVIE_DELETED, data: deletedMovie});
-
-    } catch (err) {
-        return APIResponse.error(res,{status:500, message: Messages.MOVIES.ERROR_DELETING_MOVIE, error: err.message});
+// movie status
+const movieStatus = async (req, res) => {
+  try {
+    if (req.user.role !== "superadmin") {
+      return APIResponse.error(res, {
+        status: 401,
+        message: Messages.MOVIES.AUTH_FORBIDDEN,
+      });
     }
+
+    const { id } = req.params;
+
+    // Check if movie exists before updating
+    const movie = await movieService.getMovieById(id);
+    if (!movie) {
+      return APIResponse.error(res, {
+        status: 404,
+        message: Messages.MOVIES.MOVIE_NOT_FOUND,
+      });
+    }
+
+    const response  = await movieService.updateMovieStatus(id, "inactive");
+
+    return APIResponse.success(res, {
+      status: 200,
+      message: Messages.MOVIES.MOVIE_STATUS_UPDATED,
+      data: response,
+    });
+  } catch (err) {
+    console.error("Error updating movie status:", err);
+    return APIResponse.error(res, {
+      status: 500,
+      message: Messages.MOVIES.MOVIE_STATUS_UPDATED_ERROR,
+      data: err.message,
+    });
+  }
+};
+
+// edit movie 
+const updateMovie = async (req, res) => {
+  try {
+    // Ensure the user has 'superadmin' role to update movie
+    if (req.user.role !== 'superadmin') {
+      return APIResponse.error(res, {
+        status: 401,
+        message: Messages.MOVIES.AUTH_FORBIDDEN,
+      });
+    }
+
+    const { id } = req.params;
+    const updateData = req.body; // Assuming the movie data to be updated comes in the body
+
+    // Check if the movie exists before editing
+    const movie = await movieService.getMovieById(id);
+    if (!movie) {
+      return APIResponse.error(res, {
+        status: 404,
+        message: Messages.MOVIES.MOVIE_NOT_FOUND,
+      });
+    }
+
+    // Call the service function to edit the movie
+    const updatedMovie = await movieService.editMovie(id, updateData);
+    
+    // Return the success response with the updated movie data
+    return APIResponse.success(res, {
+      status: 200,
+      message: Messages.MOVIES.MOVIE_UPDATED,
+      data: updatedMovie,
+    });
+  } catch (err) {
+    // Error handling
+    return APIResponse.error(res, {
+      status: 500,
+      message: Messages.MOVIES.MOVIE_UPDATED_ERROR,
+      data: err.message,
+    });
+  }
 };
 
 //get movies by id
@@ -79,6 +142,7 @@ const getMovieById = async (req, res) => {
 module.exports= {
     addMovie,
     getAllMovies,
-    deleteMovies,
+    movieStatus,
     getMovieById,
+    updateMovie,
 }

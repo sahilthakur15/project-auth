@@ -43,7 +43,13 @@ const Messages = {
         MOVIE_DELETED: "Movie deleted successfully.",
         ERROR_ADDING_MOVIE: "Error adding movie.",
         ERROR_FETCHING_MOVIES: "Error fetching movies.",
-        ERROR_DELETING_MOVIE: "Error deleting movie."
+        ERROR_DELETING_MOVIE: "Error deleting movie.",
+        AUTH_FORBIDDEN: "Only Super Admin can change status.",
+        MOVIE_STATUS_UPDATED: "Movie status updated successfully.",
+        MOVIE_STATUS_UPDATED_ERROR: "Error updating movie status.",
+        MOVIE_UPDATED: "Movie updated successfully.",
+        MOVIE_UPDATED_ERROR: "Error updating movie.",
+
     },
     ORDERS: {
         REQUIRED_FIELDS: "All required fields must be filled.",

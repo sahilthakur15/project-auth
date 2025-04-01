@@ -20,9 +20,16 @@ const app = express();
 
 // ✅ Fix CORS Issue - Keep Only One CORS Configuration
 app.use(
+  // cors({
+  //   origin: "https://book-karo-liard.vercel.app", // Allow frontend only
+  //   methods: ["GET", "POST", "PUT", "DELETE"],
+  //   allowedHeaders: ["Content-Type", "Authorization", "user-role"],
+  //   credentials: true,
+  // })
+
   cors({
-    origin: "https://book-karo-liard.vercel.app", // Allow frontend only
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    origin: "http://localhost:3000", // Allow frontend only
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization", "user-role"],
     credentials: true,
   })

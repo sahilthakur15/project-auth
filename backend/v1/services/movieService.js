@@ -15,15 +15,30 @@ const getMovieById = async (id) => {
     return await Movie.findById(id);
 };
 
-// delete movie by id
-const deleteMovieById = async (id) => {
-    return await Movie.findByIdAndDelete(id);
+//  movie status
+const updateMovieStatus = async (id, status) => {
+    return await Movie.findByIdAndUpdate(id, {status}, { new: true});
 };
+
+// edit movie 
+const editMovie = async (id, movieData) => {
+    try {
+      // Find movie by ID and update the fields provided in movieData
+      const updatedMovie = await Movie.findByIdAndUpdate(id, movieData, { new: true });
+      if (!updatedMovie) {
+        throw new Error('Movie not found');
+      }
+      return updatedMovie; // Return updated movie data
+    } catch (err) {
+      throw new Error(err.message || 'Error updating movie');
+    }
+  };
 
 
 module.exports = {
     addMovie,
     getAllMovies,
     getMovieById,
-    deleteMovieById,
+    updateMovieStatus,
+    editMovie
 }

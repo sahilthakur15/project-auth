@@ -21,8 +21,9 @@ const ROUTES = {
       ADMIN_UPDATE_USER: "/updateuser/:id",
       ADMIN_MOVIES: "/allmovies",
       ADMIN_ADD_MOVIES: "/addmovies",
-      ADMIN_DELETE_MOVIES: "/deletemovies/:id",
+      ADMIN_MOVIE_STATUS: "/deletemovies/:id",
       ADMIN_ORDERS: "/getAllOrders",
+      ADMIN_UPDATE_MOVIE:"/updatemovie/:id",
       
       
       //user routes
@@ -31,6 +32,7 @@ const ROUTES = {
       USER_MOVIE_BOOKING:"/bookmovie",
       USER_PAYMENT_STATUS:"/updatestatus", 
       USER_BOOKED_MOVIES:"/getbookedmovies",
+      USER_UPDATE_PROFILE:"/updateprofile",
 
       
     }
