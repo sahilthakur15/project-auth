@@ -54,7 +54,7 @@ export default function MoviesNavbar({ fetchMovies }) {
         if (response?.error) {
             alert(response.error); // Show alert for unauthorized action
         } else {
-            alert("✅ Movie successfully added! 🎉");
+            alert("✅ Movie successfully added!");
             fetchMovies(); // Refresh the movie list
             setShowForm(false);
             setNewMovie({
@@ -69,8 +69,8 @@ export default function MoviesNavbar({ fetchMovies }) {
             });
         }
     } catch (error) {
-        console.error("❌ Error adding movie:", error);
-        alert("❌ Failed to add movie. Please try again.");
+        console.error("Error adding movie:", error);
+        alert("Failed to add movie. Please try again.");
     } finally {
         setLoading(false);
     }

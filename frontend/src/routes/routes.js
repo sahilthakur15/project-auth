@@ -1,5 +1,5 @@
 // backend url
-export const BASE_URL = process.env.REACT_APP_BACKEND_URL || "http://localhost:8001/api";
+export const BASE_URL = process.env.REACT_APP_BACKEND_URL || "http://localhost:8002/api";
 
 
 // Page routes
@@ -32,7 +32,8 @@ ADMIN :
     UPDATE_USER: "/admin/updateuser",
     DELETE_USER: "/admin/deleteuser",
     ADD_MOVIES: "/admin/addmovies",
-    DELETE_MOVIE: "/admin/deletemovies"
+    UPDATE_MOVIE_STATUS: "/admin/deletemovies",
+    EDIT_MOVIES: "/admin/updatemovie",
 },
 USER :
 {
@@ -40,7 +41,8 @@ USER :
     MOVIE_DETAIL: "/user/movie",
     BOOK_MOVIE: "/user/bookmovie",
     UPDATE_STATUS: "/user/updatestatus",
-    GET_BOOKED_MOVIES: "/user/getbookedmovies"
+    GET_BOOKED_MOVIES: "/user/getbookedmovies",
+    EDIT_PROFILE: "/user/updateprofile",
 },
 
 }

@@ -4,7 +4,7 @@ import "../style/Moviedetail.css";
 import { fetchMovieDetail, bookMovieTickets, processPayment } from "../services/movieDetailService";
 import Loader from "../utils/Loader"; // Importing the loader
 import toast from "react-hot-toast"; // Import HotToast
-import { Toaster } from "react-hot-toast"; // Import Toaster
+
 
 const MovieDetail = () => {
   const { _id } = useParams();
@@ -40,7 +40,7 @@ const MovieDetail = () => {
       setMovie(movieData);
     } catch (error) {
       setError("Failed to load movie details. Please try again.");
-      toast.error("❌ Failed to load movie details. Please try again."); // Show error toast
+      toast.error("Failed to load movie details. Please try again."); // Show error toast
     } finally {
       setLoading(false);
     }
@@ -59,16 +59,16 @@ const MovieDetail = () => {
         const orderID = await bookMovieTickets(movie._id, numTickets, calculatedTotalPrice);  // Use the service to book movie
         if (orderID) {
             setOrderId(orderID);
-            toast.success(`🎉 Booking Successful! Order ID: ${orderID}`);  // Show success toast
+            toast.success(`Booking Successful! Order ID: ${orderID}`);  // Show success toast
             setShowForm(false);
             setTimeout(() => setShowPaymentModal(true), 500);
         } else {
-            setMessage("❌ Booking failed. Please try again.");
-            toast.error("❌ Booking failed. Please try again."); // Show error toast
+            setMessage("Booking failed. Please try again.");
+            toast.error("Booking failed. Please try again."); // Show error toast
         }
     } catch (error) {
-        setMessage("❌ Booking failed. Please try again.");
-        toast.error("❌ Booking failed. Please try again."); // Show error toast
+        setMessage("Booking failed. Please try again.");
+        toast.error("Booking failed. Please try again."); // Show error toast
     }
   };
 
@@ -76,21 +76,21 @@ const MovieDetail = () => {
     try {
         if (!orderId) {
             setError("Order ID not found! Please book a ticket first.");
-            toast.error("❌ Order ID not found! Please book a ticket first."); // Show error toast
+            toast.error("Order ID not found! Please book a ticket first."); // Show error toast
             return;
         }
 
         const isSuccess = await processPayment(orderId);  // Use the service to process payment
 
         if (isSuccess) {
-            toast.success(`🎉 Payment Successful! Order ID: ${orderId}`);  // Show success toast
+            toast.success(`Payment Successful! Order ID: ${orderId}`);  // Show success toast
             setShowPaymentModal(false);
         } else {
-            toast.error("❌ Payment failed. Try again."); // Show error toast
+            toast.error("Payment failed. Try again."); // Show error toast
         }
     } catch (error) {
-        setError("❌ Payment update failed. Please try again.");
-        toast.error("❌ Payment update failed. Please try again."); // Show error toast
+        setError("Payment update failed. Please try again.");
+        toast.error("Payment update failed. Please try again."); // Show error toast
     }
   };
 
@@ -189,17 +189,28 @@ const MovieDetail = () => {
                 )}
 
                 <div className="small-fields">
-                  {/* Expiry Date Input */}
-                  <input
-                    type="text"
-                    placeholder="MM/YY"
+                 {/* Expiry Date Input */}
+                 <input
+                  type="text" 
+                   placeholder="MM/YY"
                     maxLength="5"
-                    value={expiryDate}
-                    onChange={(e) => setExpiryDate(e.target.value)}
-                  />
-                  {expiryDate && !/^\d{2}\/\d{2}$/.test(expiryDate) && (
-                    <p className="error-message">❌ Format: MM/YY</p>
-                  )}
+                     value={expiryDate}
+                      onChange={(e) => setExpiryDate(e.target.value)}
+                      />
+                      {/* Validation Messages */}
+                      {expiryDate && !/^\d{2}\/\d{2}$/.test(expiryDate) && (
+                        <p className="error-message">❌ Format: MM/YY</p>
+                        )}
+
+{expiryDate && /^\d{2}\/\d{2}$/.test(expiryDate) && (() => {
+  const [month, year] = expiryDate.split("/").map(Number);
+  const isValid = (year > 25) || (year === 25 && month > 3);
+
+  return !isValid ? (
+    <p className="error-message">❌ Expiry must be after March 2025</p>
+  ) : null;
+})()}
+
 
                   {/* CVC Input */}
                   <input

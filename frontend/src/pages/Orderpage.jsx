@@ -49,7 +49,7 @@ const OrderPage = () => {
         setError("No orders found.");
       }
     } catch (error) {
-      console.error("❌ Error fetching user orders:", error.message);
+      console.error("Error fetching user orders:", error.message);
     } finally {
       setLoading(false);
     }

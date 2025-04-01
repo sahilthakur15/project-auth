@@ -230,24 +230,40 @@ export const getUsersByStatus = async (status) => {
       return []; // Return an empty array in case of an error
     }
   };
+
+  // Admin edit movie
+  export const editMovie = async(movieId, movieData) => {
+    try {
+      const response = await axiosInstance.post(`${URLS.ADMIN.EDIT_MOVIES}/${movieId}`, movieData);
+      return response.data;
+    } catch (err) {
+      console.error("Error editing movie:", err.response?.data || err.message);
+      return { error: "Failed to edit movie. Please try again." };
+    }
+  }
   
-  // Admin delete movie function (with role-based protection)
-  export const removeMovie = async (movieId) => {
+  // Admin movie status function (with role-based protection)
+  export const updateMovieStatus = async (movieId) => {
     try {
       const userRole = localStorage.getItem("userRole");
   
       if (userRole !== "superadmin") {
-        alert("❌ You are not authorized to delete movies!");
+        alert(" You are not authorized to update movie status!");
         return { error: "Unauthorized action" };
       }
   
-      const response = await axiosInstance.delete(`${URLS.ADMIN.DELETE_MOVIE}/${movieId}`);
+      // Use PUT request to update status
+      const response = await axiosInstance.put(`${URLS.ADMIN.UPDATE_MOVIE_STATUS}/${movieId}`, {
+        status: "inactive", // Send the updated status
+      });
+  
       return response.data;
     } catch (err) {
-      console.error("❌ Error deleting movie:", err.response?.data || err.message);
-      return { error: "Failed to delete movie" };
+      console.error(" Error updating movie status:", err.response?.data || err.message);
+      return { error: "Failed to update movie status" };
     }
   };
+  
   
   // Admin add movie function
   export const addMovie = async (movieData) => {
@@ -258,7 +274,7 @@ export const getUsersByStatus = async (status) => {
       if (err.response?.status === 403) {
         return { error: "You are not authorized to add movies!" };
       }
-      console.error("❌ Error adding movie:", err.response?.data || err.message);
+      console.error(" Error adding movie:", err.response?.data || err.message);
       return { error: "Failed to add movie. Please try again." };
     }
   };
@@ -269,7 +285,7 @@ export const getUsersByStatus = async (status) => {
       const response = await axiosInstance.get(URLS.USER.ALL_MOVIES);
       return response.data?.data || [];
     } catch (err) {
-      console.error("❌ Error fetching movies:", err.response?.data || err.message);
+      console.error(" Error fetching movies:", err.response?.data || err.message);
       return []; // Return an empty array in case of an error
     }
   };
@@ -280,9 +296,20 @@ export const getUsersByStatus = async (status) => {
       const response = await axiosInstance.get(`${URLS.USER.MOVIE_DETAIL}/${movieId}`);
       return response.data?.data || null;
     } catch (err) {
-      console.error("❌ Error fetching movie details:", err.response?.data || err.message);
+      console.error(" Error fetching movie details:", err.response?.data || err.message);
     }
   };
+
+  //user edit profile
+  export const editProfile = async (userId, updateData) => {
+    try {
+      const response = await axiosInstance.patch(URLS.USER.EDIT_PROFILE, updateData);
+      return response.data;
+    } catch (err) {
+      console.error(" Error updating profile:", err.response?.data || err.message);
+      return { error: "Failed to update profile. Please try again." };
+  }
+};
   
   // user book movie function
   export const bookMovie = async (movieId, numTickets) => {
@@ -293,11 +320,11 @@ export const getUsersByStatus = async (status) => {
         paymentStatus: "Pending",
       });
   
-      console.log("✅ Booking Response:", response.data); // Debugging log
+      console.log("Booking Response:", response.data); // Debugging log
   
       return response.data?.data?.orderId || null;
     } catch (err) {
-      console.error("❌ Error booking movie:", err.response?.data || err.message);
+      console.error(" Error booking movie:", err.response?.data || err.message);
     }
   };
   
@@ -309,17 +336,17 @@ export const getUsersByStatus = async (status) => {
         paymentStatus: "Completed",
       });
   
-      console.log("📢 API Response:", response); // Debugging log
+      console.log("API Response:", response); // Debugging log
   
       if (response.data?.status === 200) {
-        console.log("✅ Payment status successfully updated!");
+        console.log(" Payment status successfully updated!");
         return true;
       } else {
-        console.log("❌ Unexpected response status:", response.data?.status);
+        console.log(" Unexpected response status:", response.data?.status);
         return false;
       }
     } catch (err) {
-      console.error("❌ Error updating payment status:", err.response?.data || err.message);
+      console.error(" Error updating payment status:", err.response?.data || err.message);
       return false;
     }
   };
@@ -330,7 +357,7 @@ export const getUsersByStatus = async (status) => {
       const response = await axiosInstance.get(URLS.USER.GET_BOOKED_MOVIES); // No userId needed
       return response.data?.data || []; // Return user's orders
     } catch (error) {
-      console.error("❌ Error fetching user orders:", error.response?.data || error.message);
+      console.error(" Error fetching user orders:", error.response?.data || error.message);
       throw error;
     }
   };
